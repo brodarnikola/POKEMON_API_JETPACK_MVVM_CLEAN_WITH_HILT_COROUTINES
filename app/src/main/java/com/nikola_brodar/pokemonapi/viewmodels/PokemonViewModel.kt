@@ -16,116 +16,70 @@
 
 package com.nikola_brodar.pokemonapi.viewmodels
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.nikola_brodar.data.database.WeatherDatabase
 import com.nikola_brodar.data.database.mapper.DbMapper
 import com.nikola_brodar.data.di_dagger2.WeatherNetwork
 import com.nikola_brodar.domain.ResultState
-import com.nikola_brodar.domain.model.CityData
-import com.nikola_brodar.domain.model.Forecast
-import com.nikola_brodar.domain.model.ForecastData
-import com.nikola_brodar.domain.repository.WeatherRepository
+import com.nikola_brodar.domain.model.*
+import com.nikola_brodar.domain.repository.PokemonRepository
 import io.reactivex.Observable
-import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.launch
 
 
 class PokemonViewModel @ViewModelInject constructor(
-    @WeatherNetwork private val weatherRepository: WeatherRepository,
+    @WeatherNetwork private val pokemonRepository: PokemonRepository,
     private val dbWeather: WeatherDatabase,
     private val dbMapper: DbMapper?
 ) : ViewModel() {
 
-    private val compositeDisposable = CompositeDisposable()
+    private val _pokemonMutableLiveData: MutableLiveData<MainPokemon> = MutableLiveData()
 
-//    private val _forecastMutableLiveData = MutableLiveData<Forecast>().apply {
-//        value = Forecast("", listOf(), CityData("", 0L))
-//    }
-//
-//    val forecastList: LiveData<Forecast> = _forecastMutableLiveData
+    val mainPokemonData: LiveData<MainPokemon> = _pokemonMutableLiveData
 
-    private val _pokemonMutableLiveData: MutableLiveData<ResultState<*>> = MutableLiveData()
-
-    val mainPokemonData:  LiveData<ResultState<*>> = _pokemonMutableLiveData
-
+    @SuppressLint("CheckResult")
     fun getPokemonData(id: Int) {
-        weatherRepository.getPokemonData(id)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .toObservable()
-            .subscribe(object : Observer<ResultState<*>> {
-                override fun onSubscribe(d: Disposable) {
-                    compositeDisposable.add(d)
-                }
 
-                override fun onNext(responseForecast: ResultState<*>) {
+        viewModelScope.launch {
+            val allPokemonsData =
+                getAllPokemonData()
 
-                    _pokemonMutableLiveData.value = responseForecast
+            val randomPokemonUrl = allPokemonsData.results.random().url.split("/")
+            val id = randomPokemonUrl.get( randomPokemonUrl.size - 2 )
+            Log.d(
+                ContentValues.TAG,
+                "last id is: ${id.toInt()}"
+            )
+            val pokemonData = pokemonRepository.getRandomSelectedPokemon(id.toInt())
+            _pokemonMutableLiveData.value = pokemonData
+        }
+    }
 
-                    //insertWeatherIntoDatabase(responseForecast)
-
-                    //_forecastMutableLiveData.value = responseForecast
-                }
-
-                override fun onError(e: Throwable) {
-                    Log.d(
-                        ContentValues.TAG,
-                        "onError received: " + e.message
-                    )
-                }
-
-                override fun onComplete() {
-
-                }
-            })
+    private suspend fun getAllPokemonData(): AllPokemons {
+        return pokemonRepository.getAllPokemons(100, 0)
     }
 
     fun getForecastFromNetwork(cityName: String) {
-        weatherRepository.getForecastData(cityName)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .toObservable()
-            .subscribe(object : Observer<ResultState<*>> {
-                override fun onSubscribe(d: Disposable) {
-                    compositeDisposable.add(d)
-                }
-
-                override fun onNext(responseForecast: ResultState<*>) {
-
-                    insertWeatherIntoDatabase(responseForecast)
-
-                    _pokemonMutableLiveData.value = responseForecast
-                }
-
-                override fun onError(e: Throwable) {
-                    Log.d(
-                        ContentValues.TAG,
-                        "onError received: " + e.message
-                    )
-                }
-
-                override fun onComplete() {
-
-                }
-            })
     }
 
     private fun insertWeatherIntoDatabase(response: ResultState<*>) {
-        when ( response ) {
+        when (response) {
             is ResultState.Success -> {
                 Observable.fromCallable {
 
                     val responseForecast = response.data as Forecast
 
-                    val weather = dbMapper?.mapDomainWeatherToDbWeather(responseForecast) ?: listOf()
+                    val weather =
+                        dbMapper?.mapDomainWeatherToDbWeather(responseForecast) ?: listOf()
                     dbWeather.weatherDAO().updateWeather(
                         weather
                     )
@@ -134,7 +88,12 @@ class PokemonViewModel @ViewModelInject constructor(
                         "da li ce uci unutra, spremiti podatke u bazu podataka: " + toString()
                     )
                 }
-                    .doOnError { Log.e("Error in observables", "Error is: ${it.message}, ${throw it}") }
+                    .doOnError {
+                        Log.e(
+                            "Error in observables",
+                            "Error is: ${it.message}, ${throw it}"
+                        )
+                    }
                     .subscribeOn(Schedulers.io())
                     .subscribe {
 
@@ -147,7 +106,10 @@ class PokemonViewModel @ViewModelInject constructor(
             }
             is ResultState.Error -> {
                 val exceptionForecast = response.exception
-                Log.d(ContentValues.TAG, "Exception inside pokemonViewModel is: ${   exceptionForecast}")
+                Log.d(
+                    ContentValues.TAG,
+                    "Exception inside pokemonViewModel is: ${exceptionForecast}"
+                )
             }
         }
 
@@ -163,7 +125,7 @@ class PokemonViewModel @ViewModelInject constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext { forecastData: ResultState.Success<Forecast> ->
                 Log.i("Size of database", "Size when reading database is: ${forecastData}")
-                _pokemonMutableLiveData.value = forecastData
+                //_pokemonMutableLiveData.value = forecastData
             }
             .subscribe()
     }
@@ -174,12 +136,6 @@ class PokemonViewModel @ViewModelInject constructor(
         }
     }
 
-
-    override fun onCleared() {
-        super.onCleared()
-        if (!compositeDisposable.isDisposed)
-            compositeDisposable.dispose()
-    }
 
 }
 

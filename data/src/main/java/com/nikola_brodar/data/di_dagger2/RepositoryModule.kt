@@ -20,8 +20,8 @@ import com.nikola_brodar.data.database.WeatherDatabase
 import com.nikola_brodar.data.database.mapper.DbMapper
 import com.nikola_brodar.data.di_dagger2.WeatherNetwork
 import com.nikola_brodar.data.networking.WeatherRepositoryApi
-import com.nikola_brodar.data.repository.WeatherRepositoryImpl
-import com.nikola_brodar.domain.repository.WeatherRepository
+import com.nikola_brodar.data.repository.PokemonRepositoryImpl
+import com.nikola_brodar.domain.repository.PokemonRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,7 +33,7 @@ class RepositoryModule {
 
     @Provides
     @WeatherNetwork
-    fun provideAllDataFromRestApiNetworkOrFromRoom(weatherDatabase: WeatherDatabase, @WeatherNetwork weatherRepositoryApi: WeatherRepositoryApi, dbMapper : DbMapper) : WeatherRepository {
-        return WeatherRepositoryImpl(weatherDatabase, weatherRepositoryApi, dbMapper)
+    fun provideAllDataFromRestApiNetworkOrFromRoom(weatherDatabase: WeatherDatabase, @WeatherNetwork weatherRepositoryApi: WeatherRepositoryApi, dbMapper : DbMapper) : PokemonRepository {
+        return PokemonRepositoryImpl(weatherDatabase, weatherRepositoryApi, dbMapper)
     }
 }

@@ -16,19 +16,14 @@
 
 package com.nikola_brodar.domain.repository
 
-import com.nikola_brodar.domain.ResultState
 import com.nikola_brodar.domain.model.*
-import io.reactivex.Flowable
 
 
-interface WeatherRepository {
+interface PokemonRepository {
 
-    fun getWeatherData(latitude: Double, longitude: Double) : Flowable<ResultState<Weather>>
+    suspend fun getAllPokemons(limit: Int, offset: Int) : AllPokemons
 
-    fun getWeatherDataByCityName(cityName: String) : Flowable<ResultState<Weather>>
-
-    fun getForecastData(cityName: String) : Flowable<ResultState<Forecast>>
+    suspend fun getRandomSelectedPokemon(id: Int) : MainPokemon
 
 
-    fun getPokemonData(id: Int) : Flowable<ResultState<MainPokemon>>
 }

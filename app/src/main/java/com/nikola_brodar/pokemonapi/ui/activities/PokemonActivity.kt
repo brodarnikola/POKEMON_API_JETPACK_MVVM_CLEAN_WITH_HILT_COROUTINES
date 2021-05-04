@@ -46,14 +46,7 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
         initializeUi()
 
         pokemonViewModel.mainPokemonData.observe(this, Observer { items ->
-            when( items ) {
-                is ResultState.Success -> {
-                    successUpdateUi(items)
-                }
-                is ResultState.Error -> {
-                    printOutExceptionInsideLog(items)
-                }
-            }
+            successUpdateUi(items)
         })
 
         pokemonViewModel.getForecastFromNetwork("London")
@@ -61,8 +54,7 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
         pokemonViewModel.getPokemonData(9)
     }
 
-    private fun successUpdateUi(items: ResultState.Success<*>) {
-        val pokemonData = items.data as MainPokemon
+    private fun successUpdateUi(pokemonData: MainPokemon) {
         Log.d(ContentValues.TAG, "Data is: ${pokemonData.stats.joinToString { "-" + it.stat.name }}")
         progressBar.visibility = View.GONE
         tvName.text = "Name: " + pokemonData.name

@@ -79,7 +79,7 @@ class NetworkModuleHilt {
             .client(client)
             .baseUrl(RETROFIT_BASE_URL)
             .addConverterFactory(converterFactory)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            //.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
     }
 
     @Singleton

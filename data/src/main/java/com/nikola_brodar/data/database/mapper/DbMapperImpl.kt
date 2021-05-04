@@ -2,6 +2,7 @@ package com.nikola_brodar.data.database.mapper
 
 import com.nikola_brodar.data.database.model.DBWeather
 import com.nikola_brodar.data.networking.model.*
+import com.nikola_brodar.data.networking.youtube.model.ApiAllPokemons
 import com.nikola_brodar.data.networking.youtube.model.ApiMainPokemon
 import com.nikola_brodar.data.networking.youtube.model.ApiPokemonSprites
 import com.nikola_brodar.data.networking.youtube.model.ApiYoutubeVideosMain
@@ -16,10 +17,16 @@ class DbMapperImpl : DbMapper {
             ResultState.Success(
                 Weather(
                     weather.map {
-                        WeatherData( it.description )
+                        WeatherData(it.description)
                     },
-                    WeatherMain( main.temp, main.feelsLike, main.tempMax, main.tempMin, main.humidity ),
-                    WeatherWind( wind.speed ),
+                    WeatherMain(
+                        main.temp,
+                        main.feelsLike,
+                        main.tempMax,
+                        main.tempMin,
+                        main.humidity
+                    ),
+                    WeatherWind(wind.speed),
                     name
                 )
             )
@@ -51,7 +58,7 @@ class DbMapperImpl : DbMapper {
 
     override fun mapDomainWeatherToDbWeather(forecast: Forecast): List<DBWeather> {
         return forecast.forecastList.map {
-            val descriptionData =  if( it.weather.isNotEmpty() )
+            val descriptionData = if (it.weather.isNotEmpty())
                 it.weather[0].description
             else
                 ""
@@ -69,8 +76,8 @@ class DbMapperImpl : DbMapper {
     override fun mapDBWeatherListToWeather(weather: DBWeather): ForecastData {
         return with(weather) {
             ForecastData(
-                ForecastMain( weather.temp, weather.feelsLike, weather.tempMax ),
-                listOf(ForecastDescription( weather.description )),
+                ForecastMain(weather.temp, weather.feelsLike, weather.tempMax),
+                listOf(ForecastDescription(weather.description)),
                 ForecastWind(weather.speed),
                 dateAndTime
             )
@@ -83,23 +90,21 @@ class DbMapperImpl : DbMapper {
             YoutubeVideosMain(
                 nextPageToken,
                 regionCode,
-//                items.map {
-//                    it.id.kind
-//                }
                 items.map {
 
-                        YoutubeVideos(
-                            YoutubeVideoId(it.id.kind, it.id.videoId),
-                            YoutubeVideoSnippet(
-                                it.snippet.title, it.snippet.description,
-                                YoutubeVideoThumbnails(
-                                    YoutubeVideoThumbnailsMedium(
-                                        it.snippet.thumbnails.medium.url,
-                                        it.snippet.thumbnails.medium.width,
-                                        it.snippet.thumbnails.medium.height
-                                    )
+                    YoutubeVideos(
+                        YoutubeVideoId(it.id.kind, it.id.videoId),
+                        YoutubeVideoSnippet(
+                            it.snippet.title, it.snippet.description,
+                            YoutubeVideoThumbnails(
+                                YoutubeVideoThumbnailsMedium(
+                                    it.snippet.thumbnails.medium.url,
+                                    it.snippet.thumbnails.medium.width,
+                                    it.snippet.thumbnails.medium.height
                                 )
-                        ))
+                            )
+                        )
+                    )
 
                 }
             )
@@ -107,39 +112,83 @@ class DbMapperImpl : DbMapper {
 
     }
 
-    override fun mapApiPokemonToDomainPokemon(pokemon: ApiMainPokemon): ResultState<MainPokemon> {
-
+    override fun mapAllPokemonToDomainAllPokemon(pokemon: ApiAllPokemons): AllPokemons {
         return with(pokemon) {
-            ResultState.Success(
-                MainPokemon(
-                    name,
-                    PokemonSprites(
-                        sprites.backDefault,
-                        sprites.frontDefault
-                    ),
-                    stats.map {
-                        with(it) {
-                            PokemonStats(
-                                baseStat,
-                                stat = PokemonStatsName(
-                                    stat.name
-                                )
-                            )
-                        }
-                    },
-                    forms.map {
-                        with(it) {
-                            PokemonForms(
-                                name
-                            )
-                        }
-                    },
-                    baseExperience,
-                    weight
-                )
+            AllPokemons(
+                count,
+                results.map {
+                    AllPokemonsData(
+                        it.name,
+                        it.url
+                    )
+                }
             )
         }
     }
+
+    override fun mapApiPokemonToDomainPokemon(pokemon: ApiMainPokemon): MainPokemon {
+        return with(pokemon) {
+            MainPokemon(
+                name,
+                PokemonSprites(
+                    sprites.backDefault,
+                    sprites.frontDefault
+                ),
+                stats.map {
+                    with(it) {
+                        PokemonStats(
+                            baseStat,
+                            stat = PokemonStatsName(
+                                stat.name
+                            )
+                        )
+                    }
+                },
+                forms.map {
+                    with(it) {
+                        PokemonForms(
+                            name
+                        )
+                    }
+                },
+                baseExperience,
+                weight
+            )
+        }
+    }
+
+//    override fun mapApiPokemonToDomainPokemon(pokemon: ApiMainPokemon): ResultState<MainPokemon> {
+//        return with(pokemon) {
+//            ResultState.Success(
+//                MainPokemon(
+//                    name,
+//                    PokemonSprites(
+//                        sprites.backDefault,
+//                        sprites.frontDefault
+//                    ),
+//                    stats.map {
+//                        with(it) {
+//                            PokemonStats(
+//                                baseStat,
+//                                stat = PokemonStatsName(
+//                                    stat.name
+//                                )
+//                            )
+//                        }
+//                    },
+//                    forms.map {
+//                        with(it) {
+//                            PokemonForms(
+//                                name
+//                            )
+//                        }
+//                    },
+//                    baseExperience,
+//                    weight
+//                )
+//            )
+//        }
+//    }
 
 
 }

@@ -18,8 +18,10 @@ package com.nikola_brodar.data.networking
 
 
 import com.nikola_brodar.data.networking.model.*
+import com.nikola_brodar.data.networking.youtube.model.ApiAllPokemons
 import com.nikola_brodar.data.networking.youtube.model.ApiMainPokemon
 import io.reactivex.Flowable
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Path
@@ -31,23 +33,29 @@ interface WeatherRepositoryApi {
     // forecast api key ->   b389e4ccf5ae4bbc8072ccd05c8f85c7
 
 
-    @GET("weather")
-    @Headers("Content-Type: application/json")
-    fun getWeather( @Query("lat") latitude: Double, @Query("lon") longitude: Double, @Query("appId") appId: String ): Flowable<ApiWeather>
+//    @GET("weather")
+//    @Headers("Content-Type: application/json")
+//    fun getWeather( @Query("lat") latitude: Double, @Query("lon") longitude: Double, @Query("appId") appId: String ): Flowable<ApiWeather>
+//
+//    @GET("weather")
+//    @Headers("Content-Type: application/json")
+//    fun getWeatherByCityName( @Query("q") cityName: String, @Query("appId") appId: String ): Flowable<ApiWeather>
+//
+//    @GET("forecast")
+//    @Headers("Content-Type: application/json")
+//    fun getForecast( @Query("q") cityName: String, @Query("appId") appId: String ): Flowable<ApiForecast>
 
-    @GET("weather")
-    @Headers("Content-Type: application/json")
-    fun getWeatherByCityName( @Query("q") cityName: String, @Query("appId") appId: String ): Flowable<ApiWeather>
 
-    @GET("forecast")
+
+    @GET("pokemon")
     @Headers("Content-Type: application/json")
-    fun getForecast( @Query("q") cityName: String, @Query("appId") appId: String ): Flowable<ApiForecast>
+    suspend fun getAllPokemons(  @Query("limit") limit: Int, @Query("offset") offset: Int  ): Response<ApiAllPokemons>
 
 
 
     @GET("pokemon/{id}")
     @Headers("Content-Type: application/json")
-    fun getPokemonData( @Path("id") id: Int ): Flowable<ApiMainPokemon>
+    suspend fun getRandomSelectedPokemon( @Path("id") id: Int ):  Response<ApiMainPokemon>
 
 
 }
