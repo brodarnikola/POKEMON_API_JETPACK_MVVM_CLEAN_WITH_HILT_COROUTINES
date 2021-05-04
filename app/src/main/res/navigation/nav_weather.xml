@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/forecast_fragment">
+
+    <fragment
+        android:id="@+id/forecast_fragment"
+        android:name="com.nikola_brodar.pokemonapi.ui.fragments.ForecastFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_forecast">
+
+        <action
+            android:id="@+id/forecast_fragment_to_forecast_database_fragment"
+            app:destination="@id/forecast_database_fragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/forecast_database_fragment"
+        android:name="com.nikola_brodar.pokemonapi.ui.fragments.ForecastDatabaseFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_forecast">
+
+        <argument
+            android:name="cityName"
+            app:argType="string"
+            android:defaultValue="London"/>
+
+    </fragment>
+
+
+</navigation>
