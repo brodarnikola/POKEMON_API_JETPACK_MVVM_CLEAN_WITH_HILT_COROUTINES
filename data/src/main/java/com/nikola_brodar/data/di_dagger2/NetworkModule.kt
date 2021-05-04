@@ -35,7 +35,7 @@ import javax.inject.Singleton
 
 
 
-private const val RETROFIT_BASE_URL = "https://api.openweathermap.org/data/2.5/"
+private const val RETROFIT_BASE_URL = "https://pokeapi.co/api/v2/"
 
 @Module
 @InstallIn(ApplicationComponent::class)

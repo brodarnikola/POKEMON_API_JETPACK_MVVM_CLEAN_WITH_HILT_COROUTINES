@@ -8,45 +8,36 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.nikola_brodar.domain.ResultState
 import com.nikola_brodar.domain.model.Forecast
+import com.nikola_brodar.domain.model.MainPokemon
 import com.nikola_brodar.pokemonapi.R
-import com.nikola_brodar.pokemonapi.databinding.ActivityWeatherBinding
+import com.nikola_brodar.pokemonapi.databinding.ActivityPokemonBinding
 import com.nikola_brodar.pokemonapi.ui.adapters.ForecastAdapter
 import com.nikola_brodar.pokemonapi.viewmodels.ForecastViewModel
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_weather.*
+import kotlinx.android.synthetic.main.activity_pokemon.*
 
 
-class WeatherActivity : BaseActivity(R.id.no_internet_layout) {
+class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
 
     val forecastViewModel: ForecastViewModel by viewModels()
 
     private lateinit var forecastAdapter: ForecastAdapter
     var weatherLayoutManager: LinearLayoutManager? = null
 
-    private lateinit var binding: ActivityWeatherBinding
+    private lateinit var binding: ActivityPokemonBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityWeatherBinding.inflate(layoutInflater)
+        binding = ActivityPokemonBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
-        //setContentView(R.layout.activity_weather)
-
-
-
-//        binding = FragmentForecastBinding.inflate(inflater, container, false)
-//        context ?: return binding.root
-//
-//        return binding.root
-
-
         setSupportActionBar(findViewById(R.id.toolbarWeather))
         supportActionBar?.setDisplayShowTitleEnabled(false)
-
     }
 
     override fun onStart() {
@@ -55,10 +46,15 @@ class WeatherActivity : BaseActivity(R.id.no_internet_layout) {
 
         initializeUi()
 
-        forecastViewModel.forecastList.observe(this, Observer { items ->
-            when ( items ) {
+        forecastViewModel.mainPokemonData.observe(this, Observer { items ->
+            when( items ) {
                 is ResultState.Success -> {
                     successUpdateUi(items)
+                    val test5 = items.data as MainPokemon
+                    Log.d(
+                        ContentValues.TAG,
+                        "onNext received: " + test5.name + " backDefault: " + test5.sprites.backDefault
+                    )
                 }
                 is ResultState.Error -> {
                     printOutExceptionInsideLog(items)
@@ -67,33 +63,48 @@ class WeatherActivity : BaseActivity(R.id.no_internet_layout) {
         })
 
         forecastViewModel.getForecastFromNetwork("London")
+
+        forecastViewModel.getPokemonData(9)
     }
 
     private fun successUpdateUi(items: ResultState.Success<*>) {
-        val forecastList = items.data as Forecast
-        Log.d(ContentValues.TAG, "Data is: ${forecastList.forecastList.joinToString { "-" }}")
+        val pokemonData = items.data as MainPokemon
+        Log.d(ContentValues.TAG, "Data is: ${pokemonData.stats.joinToString { "-" + it.stat.name }}")
         progressBar.visibility = View.GONE
-        forecastAdapter.updateDevices(forecastList.forecastList.toMutableList())
+        tvName.text = "Name: " + pokemonData.name
+
+        Glide.with(this)
+            .load( pokemonData.sprites.backDefault)
+            .placeholder(R.drawable.garden_tab_selector)
+            .error(R.drawable.garden_tab_selector)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into(ivBack)
+
+        Glide.with(this)
+            .load( pokemonData.sprites.frontDefault)
+            .placeholder(R.drawable.garden_tab_selector)
+            .error(R.drawable.garden_tab_selector)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into(ivFront)
+        forecastAdapter.updateDevices(pokemonData.stats.toMutableList())
     }
 
     private fun printOutExceptionInsideLog(items: ResultState.Error) {
-        val exceptionForecast = items.exception
-        Log.d(ContentValues.TAG, "Exception inside forecast fragment is: ${   exceptionForecast}")
+        val exception = items.exception
+        Log.d(ContentValues.TAG, "Exception inside pokemon activity is: ${   exception}")
     }
 
     private fun initializeUi() {
 
-        tvForecast.text = "City name: London. Forecast for next 5 days: "
-
-        weatherLayoutManager = LinearLayoutManager(this@WeatherActivity, RecyclerView.VERTICAL, false)
+        weatherLayoutManager = LinearLayoutManager(this@PokemonActivity, RecyclerView.VERTICAL, false)
 
         forecastAdapter = ForecastAdapter( mutableListOf() )
 
-        binding.forecastList.apply {
+        binding.pokemonList.apply {
             layoutManager = weatherLayoutManager
             adapter = forecastAdapter
         }
-        binding.forecastList.adapter = forecastAdapter
+        binding.pokemonList.adapter = forecastAdapter
 
         binding.btnRoomOldWeatherData.setOnClickListener {
 //            val direction =

@@ -51,4 +51,10 @@ class WeatherRepositoryImpl constructor(
         return correctResult
     }
 
+    override fun getPokemonData(id: Int): Flowable<ResultState<MainPokemon>> {
+        val result = service.getPokemonData(id)
+        val correctResult = result.map { dbMapper?.mapApiPokemonToDomainPokemon(it)!! }
+        return correctResult
+    }
+
 }

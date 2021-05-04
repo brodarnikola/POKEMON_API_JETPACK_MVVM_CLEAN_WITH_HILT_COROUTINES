@@ -2,6 +2,7 @@ package com.nikola_brodar.data.database.mapper
 
 import com.nikola_brodar.data.database.model.DBWeather
 import com.nikola_brodar.data.networking.model.*
+import com.nikola_brodar.data.networking.youtube.model.ApiMainPokemon
 import com.nikola_brodar.data.networking.youtube.model.ApiYoutubeVideosMain
 import com.nikola_brodar.domain.ResultState
 import com.nikola_brodar.domain.model.*
@@ -21,4 +22,7 @@ interface DbMapper {
 
 
     fun mapApiYoutubeVideosToDomainYoutube( youtubeVideosMain: ApiYoutubeVideosMain): YoutubeVideosMain
+
+
+    fun mapApiPokemonToDomainPokemon( pokemon: ApiMainPokemon): ResultState<MainPokemon>
 }

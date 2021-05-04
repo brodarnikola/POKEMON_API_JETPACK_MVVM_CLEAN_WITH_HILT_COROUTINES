@@ -2,6 +2,8 @@ package com.nikola_brodar.data.database.mapper
 
 import com.nikola_brodar.data.database.model.DBWeather
 import com.nikola_brodar.data.networking.model.*
+import com.nikola_brodar.data.networking.youtube.model.ApiMainPokemon
+import com.nikola_brodar.data.networking.youtube.model.ApiPokemonSprites
 import com.nikola_brodar.data.networking.youtube.model.ApiYoutubeVideosMain
 import com.nikola_brodar.domain.ResultState
 import com.nikola_brodar.domain.model.*
@@ -103,6 +105,40 @@ class DbMapperImpl : DbMapper {
             )
         }
 
+    }
+
+    override fun mapApiPokemonToDomainPokemon(pokemon: ApiMainPokemon): ResultState<MainPokemon> {
+
+        return with(pokemon) {
+            ResultState.Success(
+                MainPokemon(
+                    name,
+                    PokemonSprites(
+                        sprites.backDefault,
+                        sprites.frontDefault
+                    ),
+                    stats.map {
+                        with(it) {
+                            PokemonStats(
+                                baseStat,
+                                stat = PokemonStatsName(
+                                    stat.name
+                                )
+                            )
+                        }
+                    },
+                    forms.map {
+                        with(it) {
+                            PokemonForms(
+                                name
+                            )
+                        }
+                    },
+                    baseExperience,
+                    weight
+                )
+            )
+        }
     }
 
 

@@ -1,3 +1,4 @@
+
 package com.nikola_brodar.pokemonapi.ui.fragments
 //
 //import android.content.ContentValues
@@ -79,17 +80,17 @@ package com.nikola_brodar.pokemonapi.ui.fragments
 //
 //    private fun initializeUi() {
 //
-//        tvForecast.text = "City name: ${args.cityName}. Forecast from room, database: "
+//        tvName.text = "City name: ${args.cityName}. Forecast from room, database: "
 //
 //        weatherLayoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
 //
 //        forecastDatabaseAdapter = ForecastDatabaseAdapter( mutableListOf() )
 //
-//        forecast_list.apply {
+//        pokemon_list.apply {
 //            layoutManager = weatherLayoutManager
 //            adapter = forecastDatabaseAdapter
 //        }
-//        forecast_list.adapter = forecastDatabaseAdapter
+//        pokemon_list.adapter = forecastDatabaseAdapter
 //    }
 //
 //}

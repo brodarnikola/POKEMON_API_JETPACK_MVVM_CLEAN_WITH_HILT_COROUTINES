@@ -20,7 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.nikola_brodar.pokemonapi.ui.activities.WeatherActivity" />
+        <activity android:name="com.nikola_brodar.pokemonapi.ui.activities.PokemonActivity" />
 
     </application>
 

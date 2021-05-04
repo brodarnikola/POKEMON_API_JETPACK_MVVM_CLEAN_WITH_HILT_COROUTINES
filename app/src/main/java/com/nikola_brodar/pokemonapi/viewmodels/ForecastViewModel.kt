@@ -52,9 +52,41 @@ class ForecastViewModel @ViewModelInject constructor(
 //
 //    val forecastList: LiveData<Forecast> = _forecastMutableLiveData
 
-    private val _forecastMutableLiveData: MutableLiveData<ResultState<*>> = MutableLiveData()
+    private val _pokemonMutableLiveData: MutableLiveData<ResultState<*>> = MutableLiveData()
 
-    val forecastList:  LiveData<ResultState<*>> = _forecastMutableLiveData
+    val mainPokemonData:  LiveData<ResultState<*>> = _pokemonMutableLiveData
+
+    fun getPokemonData(id: Int) {
+        weatherRepository.getPokemonData(id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .toObservable()
+            .subscribe(object : Observer<ResultState<*>> {
+                override fun onSubscribe(d: Disposable) {
+                    compositeDisposable.add(d)
+                }
+
+                override fun onNext(responseForecast: ResultState<*>) {
+
+                    _pokemonMutableLiveData.value = responseForecast
+
+                    //insertWeatherIntoDatabase(responseForecast)
+
+                    //_forecastMutableLiveData.value = responseForecast
+                }
+
+                override fun onError(e: Throwable) {
+                    Log.d(
+                        ContentValues.TAG,
+                        "onError received: " + e.message
+                    )
+                }
+
+                override fun onComplete() {
+
+                }
+            })
+    }
 
     fun getForecastFromNetwork(cityName: String) {
         weatherRepository.getForecastData(cityName)
@@ -70,7 +102,7 @@ class ForecastViewModel @ViewModelInject constructor(
 
                     insertWeatherIntoDatabase(responseForecast)
 
-                    _forecastMutableLiveData.value = responseForecast
+                    _pokemonMutableLiveData.value = responseForecast
                 }
 
                 override fun onError(e: Throwable) {
@@ -131,7 +163,7 @@ class ForecastViewModel @ViewModelInject constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .doOnNext { forecastData: ResultState.Success<Forecast> ->
                 Log.i("Size of database", "Size when reading database is: ${forecastData}")
-                _forecastMutableLiveData.value = forecastData
+                _pokemonMutableLiveData.value = forecastData
             }
             .subscribe()
     }

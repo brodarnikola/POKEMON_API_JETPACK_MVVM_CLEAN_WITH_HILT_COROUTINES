@@ -1,61 +1,47 @@
 package com.nikola_brodar.pokemonapi.ui.adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.nikola_brodar.pokemonapi.R
-import com.nikola_brodar.domain.model.ForecastData
-import kotlinx.android.synthetic.main.forecast_list.view.*
+import com.nikola_brodar.domain.model.PokemonStats
+import com.nikola_brodar.pokemonapi.databinding.PokemonStatsListBinding
 
 class ForecastAdapter(
-    var forecastResultList: MutableList<ForecastData>
-) : RecyclerView.Adapter<ForecastAdapter.WeatherViewHolder>() {
+    var pokemonStatsList: MutableList<PokemonStats>
+) : RecyclerView.Adapter<ForecastAdapter.PokemonViewHolder>() {
 
-    override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) {
-        holder.bindItem( forecastResultList[position] )
+    override fun onBindViewHolder(holder: PokemonViewHolder, position: Int) {
+        holder.bindItem( pokemonStatsList[position] )
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder {
-        val itemView =
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.forecast_database_list, parent, false)
-        return WeatherViewHolder(itemView)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonViewHolder {
+        return PokemonViewHolder(
+            PokemonStatsListBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
-    inner class WeatherViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class PokemonViewHolder(private val binding: PokemonStatsListBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        val tvTemp: TextView = itemView.tvTemp
-        val tvMax: TextView = itemView.tvMax
-        val tvFeelsLike: TextView = itemView.tvFeelsLike
-        val tvWind: TextView = itemView.tvWind
-        val tvDescription: TextView = itemView.tvDescription
-        val tvDate: TextView = itemView.tvDate
+        fun bindItem(item: PokemonStats) {
 
-        fun bindItem(item: ForecastData) {
-
-            tvTemp.text = "Temp: " + item.main.temp
-            tvMax.text = "Temp max: " + item.main.tempMax
-            tvFeelsLike.text = "Feels like: " + item.main.feelsLike
-            tvWind.text = "Wind Speed: " + item.wind.speed
-            if( item.weather.isNotEmpty() ) {
-                tvDescription.visibility = View.VISIBLE
-                tvDescription.text = "Description: " + item.weather[0].description
+            binding.apply {
+                tvTemp.text = item.stat.name
+                tvMax.text = " " + item.baseStat
             }
-            else
-                tvDescription.visibility = View.GONE
-            tvDate.text = "Date and time: " + item.dateAndTime
         }
     }
 
     override fun getItemCount(): Int {
-        return forecastResultList.size
+        return pokemonStatsList.size
     }
 
-    fun updateDevices(updatedDevices: MutableList<ForecastData>) {
-        forecastResultList.addAll(updatedDevices)
-        notifyItemRangeInserted(forecastResultList.size, updatedDevices.size)
+    fun updateDevices(updatedDevices: MutableList<PokemonStats>) {
+        pokemonStatsList.addAll(updatedDevices)
+        notifyItemRangeInserted(pokemonStatsList.size, updatedDevices.size)
     }
 
 }

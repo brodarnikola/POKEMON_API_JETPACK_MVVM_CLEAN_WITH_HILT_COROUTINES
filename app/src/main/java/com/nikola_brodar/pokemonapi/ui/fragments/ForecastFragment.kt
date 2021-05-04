@@ -19,7 +19,7 @@ package com.nikola_brodar.pokemonapi.ui.fragments
 //import com.nikola_brodar.pokemonapi.ui.adapters.ForecastAdapter
 //import com.nikola_brodar.pokemonapi.viewmodels.ForecastViewModel
 //import dagger.hilt.android.AndroidEntryPoint
-//import kotlinx.android.synthetic.main.activity_weather.*
+//import kotlinx.android.synthetic.main.activity_pokemon.*
 //import kotlinx.android.synthetic.main.fragment_forecast.*
 //
 //@AndroidEntryPoint
@@ -78,7 +78,7 @@ package com.nikola_brodar.pokemonapi.ui.fragments
 //
 //    private fun initializeUi() {
 //
-//        tvForecast.text = "City name: London. Forecast for next 5 days: "
+//        tvName.text = "City name: London. Forecast for next 5 days: "
 //
 //        weatherLayoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
 //
