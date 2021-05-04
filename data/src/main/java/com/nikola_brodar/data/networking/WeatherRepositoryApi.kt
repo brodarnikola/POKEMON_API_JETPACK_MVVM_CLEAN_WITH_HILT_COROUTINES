@@ -21,6 +21,7 @@ import com.nikola_brodar.data.networking.model.*
 import io.reactivex.Flowable
 import retrofit2.http.GET
 import retrofit2.http.Headers
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 
@@ -40,6 +41,12 @@ interface WeatherRepositoryApi {
     @GET("forecast")
     @Headers("Content-Type: application/json")
     fun getForecast( @Query("q") cityName: String, @Query("appId") appId: String ): Flowable<ApiForecast>
+
+
+
+    @GET("pokemon/{id}")
+    @Headers("Content-Type: application/json")
+    fun getPokemonData( @Path("id") id: Int ): Flowable<ApiMainPokemon>
 
 
 }

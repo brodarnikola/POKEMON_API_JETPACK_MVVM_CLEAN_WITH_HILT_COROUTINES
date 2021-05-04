@@ -8,7 +8,7 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.activities.WeatherActivity" >
+        tools:context=".ui.activities.PokemonActivity" >
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
@@ -40,7 +40,7 @@
                     android:maxLines="2"
                     android:paddingLeft="?attr/actionBarSize"
                     android:paddingRight="?attr/actionBarSize"
-                    android:text="WEATHER"
+                    android:text="POKEMON"
                     android:textColor="@color/colorWhite"
                     android:textSize="22sp" />
 

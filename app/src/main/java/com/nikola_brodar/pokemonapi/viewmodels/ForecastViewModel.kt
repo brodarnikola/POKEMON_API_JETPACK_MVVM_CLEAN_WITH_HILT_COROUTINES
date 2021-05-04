@@ -29,6 +29,7 @@ import com.nikola_brodar.domain.ResultState
 import com.nikola_brodar.domain.model.CityData
 import com.nikola_brodar.domain.model.Forecast
 import com.nikola_brodar.domain.model.ForecastData
+import com.nikola_brodar.domain.model.MainPokemon
 import com.nikola_brodar.domain.repository.WeatherRepository
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -55,6 +56,41 @@ class ForecastViewModel @ViewModelInject constructor(
     private val _forecastMutableLiveData: MutableLiveData<ResultState<*>> = MutableLiveData()
 
     val forecastList:  LiveData<ResultState<*>> = _forecastMutableLiveData
+
+    fun getPokemonData(id: Int) {
+        weatherRepository.getPokemonData(id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .toObservable()
+            .subscribe(object : Observer<MainPokemon> {
+                override fun onSubscribe(d: Disposable) {
+                    compositeDisposable.add(d)
+                }
+
+                override fun onNext(responseForecast: MainPokemon) {
+
+
+                    Log.d(
+                        ContentValues.TAG,
+                        "onNext received: " + responseForecast.weight + " baseExperince" + responseForecast.baseExperience
+                    )
+                    //insertWeatherIntoDatabase(responseForecast)
+
+                    //_forecastMutableLiveData.value = responseForecast
+                }
+
+                override fun onError(e: Throwable) {
+                    Log.d(
+                        ContentValues.TAG,
+                        "onError received: " + e.message
+                    )
+                }
+
+                override fun onComplete() {
+
+                }
+            })
+    }
 
     fun getForecastFromNetwork(cityName: String) {
         weatherRepository.getForecastData(cityName)

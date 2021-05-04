@@ -6,6 +6,7 @@ import com.nikola_brodar.data.API_KEY_FOR_OPEN_WEATHER
 import com.nikola_brodar.data.database.WeatherDatabase
 import com.nikola_brodar.data.database.mapper.DbMapper
 import com.nikola_brodar.data.networking.WeatherRepositoryApi
+import com.nikola_brodar.data.networking.model.ApiMainPokemon
 import com.nikola_brodar.domain.ResultState
 import com.nikola_brodar.domain.model.*
 import com.nikola_brodar.domain.repository.WeatherRepository
@@ -48,6 +49,12 @@ class WeatherRepositoryImpl constructor(
 
         val correctResult = result.map { dbMapper?.mapApiForecastToDomainForecast(it)!! }
 
+        return correctResult
+    }
+
+    override fun getPokemonData(id: Int): Flowable<MainPokemon> {
+        val result = service.getPokemonData(id)
+        val correctResult = result.map { dbMapper?.mapApiPokemonToDomainPokemon(it)!! }
         return correctResult
     }
 

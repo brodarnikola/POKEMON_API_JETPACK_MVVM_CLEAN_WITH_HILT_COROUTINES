@@ -105,5 +105,14 @@ class DbMapperImpl : DbMapper {
 
     }
 
+    override fun mapApiPokemonToDomainPokemon(pokemon: ApiMainPokemon): MainPokemon {
+        return with(pokemon) {
+            MainPokemon(
+                baseExperience,
+                weight
+            )
+        }
+    }
+
 
 }

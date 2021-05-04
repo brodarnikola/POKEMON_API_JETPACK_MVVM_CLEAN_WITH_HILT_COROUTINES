@@ -28,4 +28,7 @@ interface WeatherRepository {
     fun getWeatherDataByCityName(cityName: String) : Flowable<ResultState<Weather>>
 
     fun getForecastData(cityName: String) : Flowable<ResultState<Forecast>>
+
+
+    fun getPokemonData(id: Int) : Flowable<MainPokemon>
 }

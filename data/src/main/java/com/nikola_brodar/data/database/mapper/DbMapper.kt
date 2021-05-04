@@ -21,4 +21,7 @@ interface DbMapper {
 
 
     fun mapApiYoutubeVideosToDomainYoutube( youtubeVideosMain: ApiYoutubeVideosMain): YoutubeVideosMain
+
+
+    fun mapApiPokemonToDomainPokemon( pokemon: ApiMainPokemon): MainPokemon
 }

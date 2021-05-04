@@ -11,42 +11,30 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nikola_brodar.domain.ResultState
 import com.nikola_brodar.domain.model.Forecast
 import com.nikola_brodar.pokemonapi.R
-import com.nikola_brodar.pokemonapi.databinding.ActivityWeatherBinding
+import com.nikola_brodar.pokemonapi.databinding.ActivityPokemonBinding
 import com.nikola_brodar.pokemonapi.ui.adapters.ForecastAdapter
 import com.nikola_brodar.pokemonapi.viewmodels.ForecastViewModel
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_weather.*
+import kotlinx.android.synthetic.main.activity_pokemon.*
 
 
-class WeatherActivity : BaseActivity(R.id.no_internet_layout) {
+class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
 
     val forecastViewModel: ForecastViewModel by viewModels()
 
     private lateinit var forecastAdapter: ForecastAdapter
     var weatherLayoutManager: LinearLayoutManager? = null
 
-    private lateinit var binding: ActivityWeatherBinding
+    private lateinit var binding: ActivityPokemonBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityWeatherBinding.inflate(layoutInflater)
+        binding = ActivityPokemonBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
-        //setContentView(R.layout.activity_weather)
-
-
-
-//        binding = FragmentForecastBinding.inflate(inflater, container, false)
-//        context ?: return binding.root
-//
-//        return binding.root
-
-
         setSupportActionBar(findViewById(R.id.toolbarWeather))
         supportActionBar?.setDisplayShowTitleEnabled(false)
-
     }
 
     override fun onStart() {
@@ -67,6 +55,8 @@ class WeatherActivity : BaseActivity(R.id.no_internet_layout) {
         })
 
         forecastViewModel.getForecastFromNetwork("London")
+
+        forecastViewModel.getPokemonData(9)
     }
 
     private fun successUpdateUi(items: ResultState.Success<*>) {
@@ -85,7 +75,7 @@ class WeatherActivity : BaseActivity(R.id.no_internet_layout) {
 
         tvForecast.text = "City name: London. Forecast for next 5 days: "
 
-        weatherLayoutManager = LinearLayoutManager(this@WeatherActivity, RecyclerView.VERTICAL, false)
+        weatherLayoutManager = LinearLayoutManager(this@PokemonActivity, RecyclerView.VERTICAL, false)
 
         forecastAdapter = ForecastAdapter( mutableListOf() )
 
