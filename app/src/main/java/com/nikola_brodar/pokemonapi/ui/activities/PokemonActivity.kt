@@ -59,7 +59,7 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
                     val test5 = items.data as MainPokemon
                     Log.d(
                         ContentValues.TAG,
-                        "onNext received: " + test5.weight + " baseExperince" + test5.baseExperience
+                        "onNext received: " + test5.name + " backDefault: " + test5.sprites.backDefault
                     )
                 }
                 is ResultState.Error -> {

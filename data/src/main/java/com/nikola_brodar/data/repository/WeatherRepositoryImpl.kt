@@ -6,7 +6,6 @@ import com.nikola_brodar.data.API_KEY_FOR_OPEN_WEATHER
 import com.nikola_brodar.data.database.WeatherDatabase
 import com.nikola_brodar.data.database.mapper.DbMapper
 import com.nikola_brodar.data.networking.WeatherRepositoryApi
-import com.nikola_brodar.data.networking.model.ApiMainPokemon
 import com.nikola_brodar.domain.ResultState
 import com.nikola_brodar.domain.model.*
 import com.nikola_brodar.domain.repository.WeatherRepository

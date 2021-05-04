@@ -18,6 +18,7 @@ package com.nikola_brodar.data.networking
 
 
 import com.nikola_brodar.data.networking.model.*
+import com.nikola_brodar.data.networking.youtube.model.ApiMainPokemon
 import io.reactivex.Flowable
 import retrofit2.http.GET
 import retrofit2.http.Headers

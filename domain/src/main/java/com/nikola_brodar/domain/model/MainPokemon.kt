@@ -5,6 +5,12 @@ import com.google.gson.annotations.SerializedName
 data class MainPokemon (
 
 
+    val name: String = "",
+
+    val sprites: PokemonSprites = PokemonSprites(),
+
+    val forms: List<PokemonForms> = listOf(),
+
     @SerializedName("base_experience")
     val baseExperience: Int = 0,
 
