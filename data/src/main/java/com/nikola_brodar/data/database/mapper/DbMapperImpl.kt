@@ -117,6 +117,16 @@ class DbMapperImpl : DbMapper {
                         sprites.backDefault,
                         sprites.frontDefault
                     ),
+                    stats.map {
+                        with(it) {
+                            PokemonStats(
+                                baseStat,
+                                stat = PokemonStatsName(
+                                    stat.name
+                                )
+                            )
+                        }
+                    },
                     forms.map {
                         with(it) {
                             PokemonForms(

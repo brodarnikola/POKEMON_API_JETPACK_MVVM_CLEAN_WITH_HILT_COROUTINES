@@ -9,6 +9,8 @@ data class MainPokemon (
 
     val sprites: PokemonSprites = PokemonSprites(),
 
+    val stats: List<PokemonStats> = listOf(),
+
     val forms: List<PokemonForms> = listOf(),
 
     @SerializedName("base_experience")

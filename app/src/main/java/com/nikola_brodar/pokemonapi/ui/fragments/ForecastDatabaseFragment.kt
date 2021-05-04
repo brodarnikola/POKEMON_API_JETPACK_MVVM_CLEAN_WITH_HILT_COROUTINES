@@ -86,11 +86,11 @@ package com.nikola_brodar.pokemonapi.ui.fragments
 //
 //        forecastDatabaseAdapter = ForecastDatabaseAdapter( mutableListOf() )
 //
-//        forecast_list.apply {
+//        pokemon_list.apply {
 //            layoutManager = weatherLayoutManager
 //            adapter = forecastDatabaseAdapter
 //        }
-//        forecast_list.adapter = forecastDatabaseAdapter
+//        pokemon_list.adapter = forecastDatabaseAdapter
 //    }
 //
 //}

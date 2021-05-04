@@ -69,7 +69,7 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
 
     private fun successUpdateUi(items: ResultState.Success<*>) {
         val pokemonData = items.data as MainPokemon
-        //Log.d(ContentValues.TAG, "Data is: ${forecastList.forecastList.joinToString { "-" }}")
+        Log.d(ContentValues.TAG, "Data is: ${pokemonData.stats.joinToString { "-" + it.stat.name }}")
         progressBar.visibility = View.GONE
         tvName.text = "Name: " + pokemonData.name
 
@@ -86,7 +86,7 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
             .error(R.drawable.garden_tab_selector)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(ivFront)
-        //forecastAdapter.updateDevices(forecastList.forecastList.toMutableList())
+        forecastAdapter.updateDevices(pokemonData.stats.toMutableList())
     }
 
     private fun printOutExceptionInsideLog(items: ResultState.Error) {
@@ -100,11 +100,11 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
 
         forecastAdapter = ForecastAdapter( mutableListOf() )
 
-        binding.forecastList.apply {
+        binding.pokemonList.apply {
             layoutManager = weatherLayoutManager
             adapter = forecastAdapter
         }
-        binding.forecastList.adapter = forecastAdapter
+        binding.pokemonList.adapter = forecastAdapter
 
         binding.btnRoomOldWeatherData.setOnClickListener {
 //            val direction =

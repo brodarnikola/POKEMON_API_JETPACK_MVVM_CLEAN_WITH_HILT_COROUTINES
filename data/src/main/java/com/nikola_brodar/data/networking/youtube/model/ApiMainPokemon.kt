@@ -8,6 +8,8 @@ data class ApiMainPokemon (
 
     val sprites: ApiPokemonSprites = ApiPokemonSprites(),
 
+    val stats: List<ApiPokemonStats> = listOf(),
+
     val forms: List<ApiPokemonForms> = listOf(),
 
     @SerializedName("base_experience")
