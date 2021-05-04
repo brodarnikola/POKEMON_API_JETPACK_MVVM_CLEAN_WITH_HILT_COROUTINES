@@ -6,6 +6,7 @@ import com.nikola_brodar.data.networking.youtube.model.ApiYoutubeVideosMain
 import com.nikola_brodar.domain.ResultState
 import com.nikola_brodar.domain.model.*
 import com.nikola_brodar.domain.model.youtube.YoutubeVideosMain
+import io.reactivex.Flowable
 
 
 interface DbMapper {
@@ -23,5 +24,5 @@ interface DbMapper {
     fun mapApiYoutubeVideosToDomainYoutube( youtubeVideosMain: ApiYoutubeVideosMain): YoutubeVideosMain
 
 
-    fun mapApiPokemonToDomainPokemon( pokemon: ApiMainPokemon): MainPokemon
+    fun mapApiPokemonToDomainPokemon( pokemon: ApiMainPokemon): ResultState<MainPokemon>
 }

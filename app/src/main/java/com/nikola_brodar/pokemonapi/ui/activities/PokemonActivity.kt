@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nikola_brodar.domain.ResultState
 import com.nikola_brodar.domain.model.Forecast
+import com.nikola_brodar.domain.model.MainPokemon
 import com.nikola_brodar.pokemonapi.R
 import com.nikola_brodar.pokemonapi.databinding.ActivityPokemonBinding
 import com.nikola_brodar.pokemonapi.ui.adapters.ForecastAdapter
@@ -43,13 +44,26 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
 
         initializeUi()
 
-        forecastViewModel.forecastList.observe(this, Observer { items ->
-            when ( items ) {
+        forecastViewModel.mainPokemonData.observe(this, Observer { items ->
+//            when ( items ) {
+//                is ResultState.Success -> {
+//                    successUpdateUi(items)
+//                }
+//                is ResultState.Error -> {
+//                    printOutExceptionInsideLog(items)
+//                }
+//            }
+
+            when( items ) {
                 is ResultState.Success -> {
-                    successUpdateUi(items)
+                    val test5 = items.data as MainPokemon
+                    Log.d(
+                        ContentValues.TAG,
+                        "onNext received: " + test5.weight + " baseExperince" + test5.baseExperience
+                    )
                 }
                 is ResultState.Error -> {
-                    printOutExceptionInsideLog(items)
+
                 }
             }
         })
