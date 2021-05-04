@@ -10,7 +10,7 @@
 <!--        tools:context=".ui.fragment.ForecastFragment"-->
 
         <TextView
-            android:id="@+id/tvForecast"
+            android:id="@+id/tvName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -30,7 +30,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
 
-            app:layout_constraintTop_toBottomOf="@+id/tvForecast" />
+            app:layout_constraintTop_toBottomOf="@+id/tvName" />
 
         <ProgressBar
             android:id="@+id/progressBar"

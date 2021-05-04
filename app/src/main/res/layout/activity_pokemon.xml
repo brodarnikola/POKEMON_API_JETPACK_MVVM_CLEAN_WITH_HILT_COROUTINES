@@ -52,7 +52,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="?attr/actionBarSize">
+            android:layout_marginTop="?attr/actionBarSize"
+            android:padding="10dp">
 
 
             <LinearLayout
@@ -93,15 +94,40 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tvForecast"
+                android:id="@+id/tvName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text=""
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:padding="5dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/llOldWeatherDataFromRoom" />
+
+            <LinearLayout
+                android:id="@+id/llImages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/tvName"
+                android:weightSum="1"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/ivBack"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_weight="0.5"
+                    android:src="@drawable/garden_tab_selector"/>
+
+                <ImageView
+                    android:id="@+id/ivFront"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_weight="0.5"
+                    android:src="@drawable/garden_tab_selector"/>
+
+            </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/forecast_list"
@@ -113,7 +139,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
 
-                app:layout_constraintTop_toBottomOf="@+id/tvForecast" />
+                app:layout_constraintTop_toBottomOf="@+id/llImages" />
 
             <ProgressBar
                 android:id="@+id/progressBar"

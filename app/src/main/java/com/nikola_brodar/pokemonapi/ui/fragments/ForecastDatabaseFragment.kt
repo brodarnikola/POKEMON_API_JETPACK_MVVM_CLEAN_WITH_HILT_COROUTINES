@@ -80,7 +80,7 @@ package com.nikola_brodar.pokemonapi.ui.fragments
 //
 //    private fun initializeUi() {
 //
-//        tvForecast.text = "City name: ${args.cityName}. Forecast from room, database: "
+//        tvName.text = "City name: ${args.cityName}. Forecast from room, database: "
 //
 //        weatherLayoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
 //

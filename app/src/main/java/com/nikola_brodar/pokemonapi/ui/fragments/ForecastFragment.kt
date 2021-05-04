@@ -78,7 +78,7 @@ package com.nikola_brodar.pokemonapi.ui.fragments
 //
 //    private fun initializeUi() {
 //
-//        tvForecast.text = "City name: London. Forecast for next 5 days: "
+//        tvName.text = "City name: London. Forecast for next 5 days: "
 //
 //        weatherLayoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
 //
