@@ -3,6 +3,7 @@ package com.nikola_brodar.pokemonapi.ui.activities
 import android.content.ContentValues
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -71,7 +72,7 @@ class WeatherActivity : BaseActivity(R.id.no_internet_layout) {
     private fun successUpdateUi(items: ResultState.Success<*>) {
         val forecastList = items.data as Forecast
         Log.d(ContentValues.TAG, "Data is: ${forecastList.forecastList.joinToString { "-" }}")
-        //progressBar.visibility = View.GONE
+        progressBar.visibility = View.GONE
         forecastAdapter.updateDevices(forecastList.forecastList.toMutableList())
     }
 
@@ -82,23 +83,23 @@ class WeatherActivity : BaseActivity(R.id.no_internet_layout) {
 
     private fun initializeUi() {
 
-        //tvForecast.text = "City name: London. Forecast for next 5 days: "
+        tvForecast.text = "City name: London. Forecast for next 5 days: "
 
         weatherLayoutManager = LinearLayoutManager(this@WeatherActivity, RecyclerView.VERTICAL, false)
 
         forecastAdapter = ForecastAdapter( mutableListOf() )
 
-        //binding.forecastList.apply {
-            //layoutManager = weatherLayoutManager
-            //adapter = forecastAdapter
-        //}
-        //binding.forecastList.adapter = forecastAdapter
+        binding.forecastList.apply {
+            layoutManager = weatherLayoutManager
+            adapter = forecastAdapter
+        }
+        binding.forecastList.adapter = forecastAdapter
 
-        //binding.btnRoomOldWeatherData.setOnClickListener {
+        binding.btnRoomOldWeatherData.setOnClickListener {
 //            val direction =
 //                ForecastFragmentDirections.forecastFragmentToForecastDatabaseFragment( cityName = "London" )
 //            findNavController().navigate(direction)
-        //}
+        }
     }
 
 
