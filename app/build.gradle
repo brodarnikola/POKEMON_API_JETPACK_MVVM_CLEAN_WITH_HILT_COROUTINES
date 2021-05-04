@@ -10,8 +10,10 @@ android {
     buildToolsVersion "29.0.3"
 
     buildFeatures {
+        viewBinding = true
         dataBinding = true
     }
+
     defaultConfig {
         applicationId "com.nikola_brodar.pokemonapi"
         minSdkVersion 23
