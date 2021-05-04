@@ -16,8 +16,8 @@ package com.nikola_brodar.pokemonapi.ui.fragments
 //import com.nikola_brodar.domain.ResultState
 //import com.nikola_brodar.domain.model.Forecast
 //import com.nikola_brodar.pokemonapi.databinding.FragmentForecastBinding
-//import com.nikola_brodar.pokemonapi.ui.adapters.ForecastAdapter
-//import com.nikola_brodar.pokemonapi.viewmodels.ForecastViewModel
+//import com.nikola_brodar.pokemonapi.ui.adapters.PokemonAdapter
+//import com.nikola_brodar.pokemonapi.viewmodels.PokemonViewModel
 //import dagger.hilt.android.AndroidEntryPoint
 //import kotlinx.android.synthetic.main.activity_pokemon.*
 //import kotlinx.android.synthetic.main.fragment_forecast.*
@@ -25,9 +25,9 @@ package com.nikola_brodar.pokemonapi.ui.fragments
 //@AndroidEntryPoint
 //class ForecastFragment : Fragment() {
 //
-//    val forecastViewModel: ForecastViewModel by viewModels()
+//    val pokemonViewModel: PokemonViewModel by viewModels()
 //
-//    private lateinit var forecastAdapter: ForecastAdapter
+//    private lateinit var forecastAdapter: PokemonAdapter
 //    var weatherLayoutManager: LinearLayoutManager? = null
 //
 //    lateinit var binding: FragmentForecastBinding
@@ -50,7 +50,7 @@ package com.nikola_brodar.pokemonapi.ui.fragments
 //
 //        initializeUi()
 //
-//        forecastViewModel.forecastList.observe(this@ForecastFragment, Observer { items ->
+//        pokemonViewModel.forecastList.observe(this@ForecastFragment, Observer { items ->
 //            when ( items ) {
 //                is ResultState.Success -> {
 //                    successUpdateUi(items)
@@ -61,7 +61,7 @@ package com.nikola_brodar.pokemonapi.ui.fragments
 //            }
 //        })
 //
-//        forecastViewModel.getForecastFromNetwork("London")
+//        pokemonViewModel.getForecastFromNetwork("London")
 //    }
 //
 //    private fun successUpdateUi(items: ResultState.Success<*>) {
@@ -82,7 +82,7 @@ package com.nikola_brodar.pokemonapi.ui.fragments
 //
 //        weatherLayoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
 //
-//        forecastAdapter = ForecastAdapter( mutableListOf() )
+//        forecastAdapter = PokemonAdapter( mutableListOf() )
 //
 //        binding.forecastList.apply {
 //            layoutManager = weatherLayoutManager

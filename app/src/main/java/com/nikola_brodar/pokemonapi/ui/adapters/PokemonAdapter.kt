@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nikola_brodar.domain.model.PokemonStats
 import com.nikola_brodar.pokemonapi.databinding.PokemonStatsListBinding
 
-class ForecastAdapter(
+class PokemonAdapter(
     var pokemonStatsList: MutableList<PokemonStats>
-) : RecyclerView.Adapter<ForecastAdapter.PokemonViewHolder>() {
+) : RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>() {
 
     override fun onBindViewHolder(holder: PokemonViewHolder, position: Int) {
         holder.bindItem( pokemonStatsList[position] )

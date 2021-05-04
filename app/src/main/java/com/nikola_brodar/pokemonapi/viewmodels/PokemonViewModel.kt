@@ -38,7 +38,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 
-class ForecastViewModel @ViewModelInject constructor(
+class PokemonViewModel @ViewModelInject constructor(
     @WeatherNetwork private val weatherRepository: WeatherRepository,
     private val dbWeather: WeatherDatabase,
     private val dbMapper: DbMapper?
@@ -147,7 +147,7 @@ class ForecastViewModel @ViewModelInject constructor(
             }
             is ResultState.Error -> {
                 val exceptionForecast = response.exception
-                Log.d(ContentValues.TAG, "Exception inside forecastViewModel is: ${   exceptionForecast}")
+                Log.d(ContentValues.TAG, "Exception inside pokemonViewModel is: ${   exceptionForecast}")
             }
         }
 

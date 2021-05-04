@@ -17,14 +17,14 @@ package com.nikola_brodar.pokemonapi.ui.fragments
 //import com.nikola_brodar.domain.model.Forecast
 //import com.nikola_brodar.pokemonapi.databinding.FragmentForecastDatabaseBinding
 //import com.nikola_brodar.pokemonapi.ui.adapters.ForecastDatabaseAdapter
-//import com.nikola_brodar.pokemonapi.viewmodels.ForecastViewModel
+//import com.nikola_brodar.pokemonapi.viewmodels.PokemonViewModel
 //import dagger.hilt.android.AndroidEntryPoint
 //import kotlinx.android.synthetic.main.fragment_forecast_database.*
 //
 //@AndroidEntryPoint
 //class ForecastDatabaseFragment : Fragment() {
 //
-//    val forecastViewModel: ForecastViewModel by viewModels()
+//    val pokemonViewModel: PokemonViewModel by viewModels()
 //
 //    private lateinit var forecastDatabaseAdapter: ForecastDatabaseAdapter
 //    var weatherLayoutManager: LinearLayoutManager? = null
@@ -51,7 +51,7 @@ package com.nikola_brodar.pokemonapi.ui.fragments
 //
 //        initializeUi()
 //
-//        forecastViewModel.forecastList.observe(this@ForecastDatabaseFragment, Observer { items ->
+//        pokemonViewModel.forecastList.observe(this@ForecastDatabaseFragment, Observer { items ->
 //
 //            when ( items ) {
 //                is ResultState.Success -> {
@@ -63,7 +63,7 @@ package com.nikola_brodar.pokemonapi.ui.fragments
 //            }
 //        })
 //
-//        forecastViewModel.getWeatherFromLocalStorage()
+//        pokemonViewModel.getWeatherFromLocalStorage()
 //    }
 //
 //    private fun successUpdateUi(items: ResultState.Success<*>) {
