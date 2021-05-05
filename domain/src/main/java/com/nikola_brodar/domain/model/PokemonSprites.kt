@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class PokemonSprites (
     @SerializedName("back_default")
-    val backDefault: String = "",
+    var backDefault: String = "",
     @SerializedName("front_default")
-    val frontDefault: String = ""
+    var frontDefault: String = ""
 )

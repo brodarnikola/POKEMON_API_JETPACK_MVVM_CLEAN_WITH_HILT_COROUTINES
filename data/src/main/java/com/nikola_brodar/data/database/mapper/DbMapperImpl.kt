@@ -95,6 +95,29 @@ class DbMapperImpl : DbMapper {
         }
     }
 
+
+    override fun mapDbPokemonStatsToDbPokemonStats(pokemon: List<DBPokemonStats>): List<PokemonStats> {
+        return pokemon.map {
+            PokemonStats(
+                it.baseStat,
+                PokemonStatsName(
+                    it.name
+                )
+            )
+        }
+    }
+
+    override fun mapDbPokemonMovesToDbPokemonMoves(pokemon: List<DBPokemonMoves>): List<PokemonMainMoves> {
+        return pokemon.map {
+            PokemonMainMoves(
+                PokemonMove(
+                    it.name,
+                    it.url
+                )
+            )
+        }
+    }
+
     override fun mapDBWeatherListToWeather(pokemon: DBPokemon): ForecastData {
         return with(pokemon) {
             ForecastData(
@@ -190,38 +213,6 @@ class DbMapperImpl : DbMapper {
     }
 
 
-//    override fun mapApiPokemonToDomainPokemon(pokemon: ApiMainPokemon): ResultState<MainPokemon> {
-//        return with(pokemon) {
-//            ResultState.Success(
-//                MainPokemon(
-//                    name,
-//                    PokemonSprites(
-//                        sprites.backDefault,
-//                        sprites.frontDefault
-//                    ),
-//                    stats.map {
-//                        with(it) {
-//                            PokemonStats(
-//                                baseStat,
-//                                stat = PokemonStatsName(
-//                                    stat.name
-//                                )
-//                            )
-//                        }
-//                    },
-//                    forms.map {
-//                        with(it) {
-//                            PokemonForms(
-//                                name
-//                            )
-//                        }
-//                    },
-//                    baseExperience,
-//                    weight
-//                )
-//            )
-//        }
-//    }
 
 
 }

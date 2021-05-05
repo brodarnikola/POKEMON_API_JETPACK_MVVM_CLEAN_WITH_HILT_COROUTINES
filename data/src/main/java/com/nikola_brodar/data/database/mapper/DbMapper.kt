@@ -40,5 +40,11 @@ interface DbMapper {
 
     fun mapDomainPokemonMovesToDbPokemonMoves( pokemon: List<PokemonMainMoves>): List<DBPokemonMoves>
 
+
+
+    fun mapDbPokemonStatsToDbPokemonStats( pokemon: List<DBPokemonStats>): List<PokemonStats>
+
+    fun mapDbPokemonMovesToDbPokemonMoves( pokemon: List<DBPokemonMoves>): List<PokemonMainMoves>
+
     //fun mapApiPokemonToDomainPokemon( pokemon: ApiMainPokemon): ResultState<MainPokemon>
 }

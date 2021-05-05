@@ -5,12 +5,12 @@ import com.google.gson.annotations.SerializedName
 data class MainPokemon (
 
 
-    val name: String = "",
+    var name: String = "",
 
     val sprites: PokemonSprites = PokemonSprites(),
 
-    val stats: List<PokemonStats> = listOf(),
+    var stats: List<PokemonStats> = listOf(),
 
-    val moves: List<PokemonMainMoves> = listOf(),
+    var moves: List<PokemonMainMoves> = listOf(),
 
 )

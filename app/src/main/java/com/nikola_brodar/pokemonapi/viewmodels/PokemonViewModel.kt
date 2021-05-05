@@ -57,39 +57,39 @@ class PokemonViewModel @ViewModelInject constructor(
     val pokemonMovesData: LiveData<List<DBPokemonMoves>> = _pokemonMovesMutableLiveData
 
     fun getPokemonMovesFromLocalStorage() {
-        Observable.fromCallable {
-            val listPokemonMove = getPokemonFromDB()
-            val response = DBPokemonMoves()
-            listPokemonMove
+        viewModelScope.launch {
+            val listPokemonMove = getPokemonMovesFromDB()
+            _pokemonMovesMutableLiveData.value = listPokemonMove
         }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext { listPokemonMove: List<DBPokemonMoves> ->
-                Log.i("Size of database", "Size when reading database is: ${listPokemonMove}")
-                _pokemonMovesMutableLiveData.value = listPokemonMove
-            }
-            .subscribe()
+    }
+
+    private suspend fun getPokemonMovesFromDB(): List<DBPokemonMoves> {
+        return dbPokemon.pokemonDAO().getSelectedMovesPokemonData()
     }
 
     fun getAllPokemonDataFromLocalStorage() {
         viewModelScope.launch {
-            flowOf(coroutineScope {
-                val deferreds = listOf(
-                    async { dbPokemon.pokemonDAO().getSelectedMainPokemonData() },
-                    async { dbPokemon.pokemonDAO().getSelectedStatsPokemonData() },
-                    async { dbPokemon.pokemonDAO().getSelectedMovesPokemonData() }
-                )
-                deferreds.awaitAll()
-                val test5 = deferreds[0].getCompleted() as DBMainPokemon
-                val test9 = deferreds[0].getCompleted() as DBMainPokemon
-            })
+            val mainPokemonData = getAllPokemonDataFromRoom()
+            _pokemonMutableLiveData.value = mainPokemonData
         }
     }
 
+    private suspend fun getAllPokemonDataFromRoom(): MainPokemon {
+        val pokemonMain = dbPokemon.pokemonDAO().getSelectedMainPokemonData()
+        val pokemonStats = dbPokemon.pokemonDAO().getSelectedStatsPokemonData()
+        val pokemonMoves = dbPokemon.pokemonDAO().getSelectedMovesPokemonData()
 
-    private fun getPokemonFromDB(): List<DBPokemonMoves> {
-        return dbPokemon.pokemonDAO().getSelectedMovesPokemonData()
+        val correctPokemonMain = MainPokemon()
+        correctPokemonMain.name = pokemonMain.name
+        correctPokemonMain.sprites.backDefault = pokemonMain.backDefault
+        correctPokemonMain.sprites.frontDefault = pokemonMain.frontDefault
+
+        correctPokemonMain.stats = dbMapper?.mapDbPokemonStatsToDbPokemonStats(pokemonStats) ?: listOf()
+        correctPokemonMain.moves = dbMapper?.mapDbPokemonMovesToDbPokemonMoves(pokemonMoves) ?: listOf()
+
+        return correctPokemonMain
     }
+
 
     @SuppressLint("CheckResult")
     fun getPokemonData(id: Int) {
@@ -105,7 +105,6 @@ class PokemonViewModel @ViewModelInject constructor(
                         ContentValues.TAG,
                         "Id is: ${id.toInt()}"
                     )
-                    //val pokemonData = pokemonRepository.getRandomSelectedPokemon(id.toInt())
                     flowOf( pokemonRepository.getRandomSelectedPokemon(id.toInt()) )
                         .map {
 
