@@ -24,8 +24,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nikola_brodar.data.database.WeatherDatabase
+import com.nikola_brodar.data.database.PokemonDatabase
 import com.nikola_brodar.data.database.mapper.DbMapper
+import com.nikola_brodar.data.database.model.DBMainPokemon
+import com.nikola_brodar.data.database.model.DBPokemonStats
 import com.nikola_brodar.data.di_dagger2.WeatherNetwork
 import com.nikola_brodar.domain.ResultState
 import com.nikola_brodar.domain.model.*
@@ -38,7 +40,7 @@ import kotlinx.coroutines.launch
 
 class PokemonViewModel @ViewModelInject constructor(
     @WeatherNetwork private val pokemonRepository: PokemonRepository,
-    private val dbWeather: WeatherDatabase,
+    private val dbPokemon: PokemonDatabase,
     private val dbMapper: DbMapper?
 ) : ViewModel() {
 
@@ -60,8 +62,43 @@ class PokemonViewModel @ViewModelInject constructor(
                 "last id is: ${id.toInt()}"
             )
             val pokemonData = pokemonRepository.getRandomSelectedPokemon(id.toInt())
+            insertPokemonIntoDatabase(pokemonData)
             _pokemonMutableLiveData.value = pokemonData
         }
+    }
+
+    private suspend fun insertPokemonIntoDatabase(pokemonData: MainPokemon) {
+        val responseForecast = pokemonData
+
+        val pokemonMain =
+            dbMapper?.mapDomainMainPokemonToDBMainPokemon(pokemonData) ?: DBMainPokemon()
+        dbPokemon.pokemonDAO().insertMainPokemonData(pokemonMain)
+
+
+
+        val pokemonStats =
+            dbMapper?.mapDomainPokemonStatsToDbPokemonStats(pokemonData.stats) ?: listOf()
+        dbPokemon.pokemonDAO().insertStatsPokemonData(pokemonStats)
+
+        val pokemonMoves =
+            dbMapper?.mapDomainPokemonMovesToDbPokemonMoves(pokemonData.moves) ?: listOf()
+        dbPokemon.pokemonDAO().insertMovesPokemonData(pokemonMoves)
+
+
+        val test5 = dbPokemon.pokemonDAO().getSelectedMainPokemonData()
+        val test7 = dbPokemon.pokemonDAO().getSelectedStatsPokemonData()
+        val test9 = dbPokemon.pokemonDAO().getSelectedMovesPokemonData()
+
+
+//        val weather =
+//            dbMapper?.mapDomainWeatherToDbWeather(responseForecast) ?: listOf()
+//        dbPokemon.pokemonDAO().updateWeather(
+//            weather
+//        )
+        Log.d(
+            "da li ce uci unutra * ",
+            "da li ce uci unutra, spremiti podatke u bazu podataka: " + toString()
+        )
     }
 
     private suspend fun getAllPokemonData(): AllPokemons {
@@ -80,7 +117,7 @@ class PokemonViewModel @ViewModelInject constructor(
 
                     val weather =
                         dbMapper?.mapDomainWeatherToDbWeather(responseForecast) ?: listOf()
-                    dbWeather.weatherDAO().updateWeather(
+                    dbPokemon.pokemonDAO().updateWeather(
                         weather
                     )
                     Log.d(
@@ -131,7 +168,7 @@ class PokemonViewModel @ViewModelInject constructor(
     }
 
     private fun getForecastFromDB(): List<ForecastData> {
-        return dbWeather.weatherDAO().getWeather().map {
+        return dbPokemon.pokemonDAO().getWeather().map {
             dbMapper?.mapDBWeatherListToWeather(it) ?: ForecastData()
         }
     }

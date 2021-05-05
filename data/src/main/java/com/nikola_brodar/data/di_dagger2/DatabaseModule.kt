@@ -17,8 +17,8 @@
 package com.nikola_brodar.data.di
 
 import android.app.Application
-import com.nikola_brodar.data.database.WeatherDatabase
-import com.nikola_brodar.data.database.dao.WeatherDAO
+import com.nikola_brodar.data.database.PokemonDatabase
+import com.nikola_brodar.data.database.dao.PokemonDAO
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,11 +31,11 @@ class DatabaseModule {
 
     @Singleton
     @Provides
-    fun provideAppDatabase( app: Application) = WeatherDatabase.create(app)
+    fun provideAppDatabase( app: Application) = PokemonDatabase.create(app)
 
     @Provides
-    fun providePlantDao(weatherDatabase: WeatherDatabase): WeatherDAO {
-        return weatherDatabase.weatherDAO()
+    fun providePlantDao(pokemonDatabase: PokemonDatabase): PokemonDAO {
+        return pokemonDatabase.pokemonDAO()
     }
 
 

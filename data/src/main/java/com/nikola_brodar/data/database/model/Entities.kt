@@ -32,10 +32,42 @@ package com.nikola_brodar.data.database.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
+
+
+@Entity(tableName = "pokemon_main_table")
+data class DBMainPokemon(
+    val name: String = "",
+    val backDefault: String = "",
+    val frontDefault: String = ""
+) {
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0
+}
+
+@Entity(tableName = "pokemon_stats_table")
+data class DBPokemonStats(
+    val baseStat: Int = 0,
+    val name: String = ""
+)
+{
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0
+}
+
+@Entity(tableName = "pokemon_moves_table")
+data class DBPokemonMoves(
+    val name: String = "",
+    val url: String = ""
+)
+{
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0
+}
 
 
 @Entity(tableName = "weather_table")
-data class DBWeather(
+data class DBPokemon(
     val temp: String,
     val feelsLike: String,
     val tempMax: String,

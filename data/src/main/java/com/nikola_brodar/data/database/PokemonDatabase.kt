@@ -30,19 +30,19 @@ private const val DB_NAME = "news_database"
 /**
  * The Room database for this app
  */
-@Database(entities = [DBWeather::class], version = 1, exportSchema = false)
+@Database(entities = [DBMainPokemon::class, DBPokemonMoves::class, DBPokemonStats::class,  DBPokemon::class,  DBMovies::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
-abstract class WeatherDatabase : RoomDatabase() {
+abstract class PokemonDatabase : RoomDatabase() {
 
-    abstract fun weatherDAO(): WeatherDAO
+    abstract fun pokemonDAO(): PokemonDAO
 
     companion object {
 
-        fun create(context: Context): WeatherDatabase {
+        fun create(context: Context): PokemonDatabase {
 
             return Room.databaseBuilder(
                 context,
-                WeatherDatabase::class.java,
+                PokemonDatabase::class.java,
                 DB_NAME
             ).build()
         }
