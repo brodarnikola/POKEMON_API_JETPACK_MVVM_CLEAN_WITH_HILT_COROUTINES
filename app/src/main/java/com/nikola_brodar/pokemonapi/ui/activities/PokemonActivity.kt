@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.nikola_brodar.domain.ResultState
 import com.nikola_brodar.domain.model.MainPokemon
 import com.nikola_brodar.pokemonapi.R
 import com.nikola_brodar.pokemonapi.databinding.ActivityPokemonBinding
@@ -60,13 +59,21 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
             pokemonViewModel.getPokemonData()
 
         floatingButton.setOnClickListener {
-            Log.d(ContentValues.TAG, "AAAAA")
+            hideProgressBar()
+            hideAllPreviousPokemonData()
+            clearAdapter()
+            pokemonViewModel.getPokemonData()
         }
+    }
+
+    private fun clearAdapter() {
+        pokemonAdapter.pokemonStatsList.clear()
     }
 
     private fun successUpdateUi(pokemonData: MainPokemon) {
         Log.d(ContentValues.TAG, "Data is: ${pokemonData.stats.joinToString { "-" + it.stat.name }}")
-        progressBar.visibility = View.GONE
+        hideProgressBar()
+        makeVisibleAllElements()
         tvName.text = "Name: " + pokemonData.name
 
         Glide.with(this)
@@ -83,6 +90,24 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(ivFront)
         pokemonAdapter.updateDevices(pokemonData.stats.toMutableList())
+    }
+
+    private fun hideProgressBar() {
+        binding.progressBar.visibility = View.GONE
+    }
+
+    private fun hideAllPreviousPokemonData() {
+        binding.tvName.visibility = View.GONE
+        binding.ivBack.visibility = View.GONE
+        binding.ivFront.visibility = View.GONE
+        binding.pokemonList.visibility = View.GONE
+    }
+
+    private fun makeVisibleAllElements() {
+        binding.tvName.visibility = View.VISIBLE
+        binding.ivBack.visibility = View.VISIBLE
+        binding.ivFront.visibility = View.VISIBLE
+        binding.pokemonList.visibility = View.VISIBLE
     }
 
     private fun initializeUi() {
