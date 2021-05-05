@@ -27,6 +27,7 @@ import androidx.lifecycle.viewModelScope
 import com.nikola_brodar.data.database.PokemonDatabase
 import com.nikola_brodar.data.database.mapper.DbMapper
 import com.nikola_brodar.data.database.model.DBMainPokemon
+import com.nikola_brodar.data.database.model.DBPokemonMoves
 import com.nikola_brodar.data.database.model.DBPokemonStats
 import com.nikola_brodar.data.di_dagger2.WeatherNetwork
 import com.nikola_brodar.domain.ResultState
@@ -48,6 +49,30 @@ class PokemonViewModel @ViewModelInject constructor(
 
     val mainPokemonData: LiveData<MainPokemon> = _pokemonMutableLiveData
 
+    private val _pokemonMovesMutableLiveData: MutableLiveData<List<DBPokemonMoves>> = MutableLiveData()
+
+    val pokemonMovesData: LiveData<List<DBPokemonMoves>> = _pokemonMovesMutableLiveData
+
+    fun getPokemonMovesFromLocalStorage() {
+        Observable.fromCallable {
+            val listPokemonMove = getPokemonFromDB()
+            val response = DBPokemonMoves()
+            listPokemonMove
+        }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext { listPokemonMove: List<DBPokemonMoves> ->
+                Log.i("Size of database", "Size when reading database is: ${listPokemonMove}")
+                _pokemonMovesMutableLiveData.value = listPokemonMove
+            }
+            .subscribe()
+    }
+
+
+    private fun getPokemonFromDB(): List<DBPokemonMoves> {
+        return dbPokemon.pokemonDAO().getSelectedMovesPokemonData()
+    }
+
     @SuppressLint("CheckResult")
     fun getPokemonData(id: Int) {
 
@@ -62,18 +87,23 @@ class PokemonViewModel @ViewModelInject constructor(
                 "last id is: ${id.toInt()}"
             )
             val pokemonData = pokemonRepository.getRandomSelectedPokemon(id.toInt())
+            deleteAllPokemonData()
             insertPokemonIntoDatabase(pokemonData)
             _pokemonMutableLiveData.value = pokemonData
         }
     }
 
+    private suspend fun deleteAllPokemonData() {
+        dbPokemon.pokemonDAO().clearMainPokemonData()
+        dbPokemon.pokemonDAO().clearPokemonStatsData()
+        dbPokemon.pokemonDAO().clearMPokemonMovesData()
+    }
+
     private suspend fun insertPokemonIntoDatabase(pokemonData: MainPokemon) {
-        val responseForecast = pokemonData
 
         val pokemonMain =
             dbMapper?.mapDomainMainPokemonToDBMainPokemon(pokemonData) ?: DBMainPokemon()
         dbPokemon.pokemonDAO().insertMainPokemonData(pokemonMain)
-
 
 
         val pokemonStats =
@@ -85,9 +115,9 @@ class PokemonViewModel @ViewModelInject constructor(
         dbPokemon.pokemonDAO().insertMovesPokemonData(pokemonMoves)
 
 
-        val test5 = dbPokemon.pokemonDAO().getSelectedMainPokemonData()
-        val test7 = dbPokemon.pokemonDAO().getSelectedStatsPokemonData()
-        val test9 = dbPokemon.pokemonDAO().getSelectedMovesPokemonData()
+        //val test5 = dbPokemon.pokemonDAO().getSelectedMainPokemonData()
+        //val test7 = dbPokemon.pokemonDAO().getSelectedStatsPokemonData()
+        //val test9 = dbPokemon.pokemonDAO().getSelectedMovesPokemonData()
 
 
 //        val weather =
@@ -103,9 +133,6 @@ class PokemonViewModel @ViewModelInject constructor(
 
     private suspend fun getAllPokemonData(): AllPokemons {
         return pokemonRepository.getAllPokemons(100, 0)
-    }
-
-    fun getForecastFromNetwork(cityName: String) {
     }
 
     private fun insertWeatherIntoDatabase(response: ResultState<*>) {

@@ -25,7 +25,7 @@ import com.nikola_brodar.data.database.dao.*
 import com.nikola_brodar.data.database.model.*
 
 
-private const val DB_NAME = "news_database"
+private const val DB_NAME = "pokemon_database"
 
 /**
  * The Room database for this app

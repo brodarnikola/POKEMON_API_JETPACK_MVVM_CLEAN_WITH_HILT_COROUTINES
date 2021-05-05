@@ -21,6 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.nikola_brodar.pokemonapi.ui.activities.PokemonActivity" />
+        <activity android:name="com.nikola_brodar.pokemonapi.ui.activities.PokemonMovesActivity" />
 
     </application>
 

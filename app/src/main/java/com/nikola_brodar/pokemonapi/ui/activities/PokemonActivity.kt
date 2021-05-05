@@ -1,6 +1,7 @@
 package com.nikola_brodar.pokemonapi.ui.activities
 
 import android.content.ContentValues
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -49,8 +50,6 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
             successUpdateUi(items)
         })
 
-        pokemonViewModel.getForecastFromNetwork("London")
-
         pokemonViewModel.getPokemonData(9)
     }
 
@@ -93,9 +92,9 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
         binding.pokemonList.adapter = pokemonAdapter
 
         binding.btnRoomOldWeatherData.setOnClickListener {
-//            val direction =
-//                ForecastFragmentDirections.forecastFragmentToForecastDatabaseFragment( cityName = "London" )
-//            findNavController().navigate(direction)
+            val intent = Intent(this, PokemonMovesActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 
