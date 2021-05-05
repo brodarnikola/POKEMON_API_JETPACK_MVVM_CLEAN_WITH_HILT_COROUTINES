@@ -34,33 +34,9 @@ import androidx.room.*
 import com.nikola_brodar.data.database.model.DBMainPokemon
 import com.nikola_brodar.data.database.model.DBPokemonMoves
 import com.nikola_brodar.data.database.model.DBPokemonStats
-import com.nikola_brodar.data.database.model.DBPokemon
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PokemonDAO {
-
-  @Query("SELECT * FROM weather_table")
-  fun getWeather(): List<DBPokemon>
-
-  @Transaction
-  fun updateWeather(pokemonData: List<DBPokemon>) {
-    clearWeather()
-    insertAllWeatherData(pokemonData)
-  }
-
-  @Query("DELETE FROM weather_table")
-  fun clearWeather()
-
-  @Insert(onConflict = OnConflictStrategy.REPLACE)
-  fun insertAllWeatherData(articles: List<DBPokemon>)
-
-
-  @Transaction
-  fun updatePokemon(pokemonData: List<DBPokemon>) {
-    clearWeather()
-    insertAllWeatherData(pokemonData)
-  }
 
 
   @Query("DELETE FROM pokemon_main_table")

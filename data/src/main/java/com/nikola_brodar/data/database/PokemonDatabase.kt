@@ -30,7 +30,7 @@ private const val DB_NAME = "pokemon_database"
 /**
  * The Room database for this app
  */
-@Database(entities = [DBMainPokemon::class, DBPokemonMoves::class, DBPokemonStats::class,  DBPokemon::class,  DBMovies::class], version = 1, exportSchema = false)
+@Database(entities = [DBMainPokemon::class, DBPokemonMoves::class, DBPokemonStats::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class PokemonDatabase : RoomDatabase() {
 

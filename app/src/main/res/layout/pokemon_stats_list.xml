@@ -3,12 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <variable
-            name="forecast"
-            type="com.nikola_brodar.domain.model.ForecastData"/>
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/parentLayout"
         android:layout_width="match_parent"

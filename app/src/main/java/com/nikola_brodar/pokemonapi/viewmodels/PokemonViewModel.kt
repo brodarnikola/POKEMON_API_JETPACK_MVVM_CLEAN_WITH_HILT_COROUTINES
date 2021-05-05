@@ -27,7 +27,7 @@ import com.nikola_brodar.data.database.PokemonDatabase
 import com.nikola_brodar.data.database.mapper.DbMapper
 import com.nikola_brodar.data.database.model.DBMainPokemon
 import com.nikola_brodar.data.database.model.DBPokemonMoves
-import com.nikola_brodar.data.di_dagger2.WeatherNetwork
+import com.nikola_brodar.data.di_dagger2.PokemonNetwork
 import com.nikola_brodar.domain.model.AllPokemons
 import com.nikola_brodar.domain.model.MainPokemon
 import com.nikola_brodar.domain.repository.PokemonRepository
@@ -39,7 +39,7 @@ import kotlinx.coroutines.launch
 
 
 class PokemonViewModel @ViewModelInject constructor(
-    @WeatherNetwork private val pokemonRepository: PokemonRepository,
+    @PokemonNetwork private val pokemonRepository: PokemonRepository,
     private val dbPokemon: PokemonDatabase,
     private val dbMapper: DbMapper?
 ) : ViewModel() {

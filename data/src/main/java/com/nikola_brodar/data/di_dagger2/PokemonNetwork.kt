@@ -6,4 +6,4 @@ import javax.inject.Qualifier
 @Qualifier
 @Documented
 @Retention(AnnotationRetention.RUNTIME)
-annotation class WeatherNetwork
+annotation class PokemonNetwork

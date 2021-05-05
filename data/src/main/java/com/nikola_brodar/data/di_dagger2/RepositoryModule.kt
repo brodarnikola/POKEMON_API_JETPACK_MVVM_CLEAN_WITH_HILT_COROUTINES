@@ -18,7 +18,7 @@ package com.nikola_brodar.data.di
 
 import com.nikola_brodar.data.database.PokemonDatabase
 import com.nikola_brodar.data.database.mapper.DbMapper
-import com.nikola_brodar.data.di_dagger2.WeatherNetwork
+import com.nikola_brodar.data.di_dagger2.PokemonNetwork
 import com.nikola_brodar.data.networking.WeatherRepositoryApi
 import com.nikola_brodar.data.repository.PokemonRepositoryImpl
 import com.nikola_brodar.domain.repository.PokemonRepository
@@ -32,8 +32,8 @@ import dagger.hilt.android.components.ActivityComponent
 class RepositoryModule {
 
     @Provides
-    @WeatherNetwork
-    fun provideAllDataFromRestApiNetworkOrFromRoom(pokemonDatabase: PokemonDatabase, @WeatherNetwork weatherRepositoryApi: WeatherRepositoryApi, dbMapper : DbMapper) : PokemonRepository {
+    @PokemonNetwork
+    fun provideAllDataFromRestApiNetworkOrFromRoom(pokemonDatabase: PokemonDatabase, @PokemonNetwork weatherRepositoryApi: WeatherRepositoryApi, dbMapper : DbMapper) : PokemonRepository {
         return PokemonRepositoryImpl(pokemonDatabase, weatherRepositoryApi, dbMapper)
     }
 }

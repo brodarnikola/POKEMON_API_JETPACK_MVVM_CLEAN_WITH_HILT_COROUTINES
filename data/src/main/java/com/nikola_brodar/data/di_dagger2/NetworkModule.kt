@@ -20,7 +20,7 @@ import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.nikola_brodar.data.BuildConfig
-import com.nikola_brodar.data.di_dagger2.WeatherNetwork
+import com.nikola_brodar.data.di_dagger2.PokemonNetwork
 import com.nikola_brodar.data.networking.WeatherRepositoryApi
 import dagger.Module
 import dagger.Provides
@@ -29,7 +29,6 @@ import dagger.hilt.android.components.ApplicationComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
@@ -43,14 +42,14 @@ class NetworkModuleHilt {
 
 
     @Provides
-    @WeatherNetwork
+    @PokemonNetwork
     fun provideLoggingInterceptor() =
         HttpLoggingInterceptor().apply { level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE }
 
     @Provides
     @Singleton
-    @WeatherNetwork
-    fun provideAuthInterceptorOkHttpClient( @WeatherNetwork interceptor: HttpLoggingInterceptor): OkHttpClient {
+    @PokemonNetwork
+    fun provideAuthInterceptorOkHttpClient( @PokemonNetwork interceptor: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder().addInterceptor(interceptor)
             .addNetworkInterceptor(StethoInterceptor())
             .build()
@@ -59,13 +58,13 @@ class NetworkModuleHilt {
 
     @Provides
     @Singleton
-    @WeatherNetwork
-    fun provideGsonConverterFactory( @WeatherNetwork gson: Gson): GsonConverterFactory =
+    @PokemonNetwork
+    fun provideGsonConverterFactory( @PokemonNetwork gson: Gson): GsonConverterFactory =
         GsonConverterFactory.create(gson)
 
     @Singleton
     @Provides
-    @WeatherNetwork
+    @PokemonNetwork
     fun provideGsonBuilder(): Gson {
         return GsonBuilder()
             .create()
@@ -73,19 +72,18 @@ class NetworkModuleHilt {
 
     @Singleton
     @Provides
-    @WeatherNetwork
-    fun provideRetrofit( @WeatherNetwork converterFactory: GsonConverterFactory, @WeatherNetwork client: OkHttpClient): Retrofit.Builder {
+    @PokemonNetwork
+    fun provideRetrofit(@PokemonNetwork converterFactory: GsonConverterFactory, @PokemonNetwork client: OkHttpClient): Retrofit.Builder {
         return Retrofit.Builder()
             .client(client)
             .baseUrl(RETROFIT_BASE_URL)
             .addConverterFactory(converterFactory)
-            //.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
     }
 
     @Singleton
     @Provides
-    @WeatherNetwork
-    fun provideWeatherService( @WeatherNetwork retrofit: Retrofit.Builder): WeatherRepositoryApi {
+    @PokemonNetwork
+    fun provideWeatherService( @PokemonNetwork retrofit: Retrofit.Builder): WeatherRepositoryApi {
         return retrofit
             .build()
             .create(WeatherRepositoryApi::class.java)

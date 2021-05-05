@@ -65,29 +65,3 @@ data class DBPokemonMoves(
     var id: Int = 0
 }
 
-
-@Entity(tableName = "weather_table")
-data class DBPokemon(
-    val temp: String,
-    val feelsLike: String,
-    val tempMax: String,
-    val description: String,
-    val speed: Double,
-    val dateAndTime: String
-) {
-    @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
-}
-
-
-@Entity(tableName = "movie_table")
-data class DBMovies(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long,
-    val idOfMovie: Long,
-    val backdropPath: String,
-    val originalLanguage: String,
-    val originalTitle: String,
-    val overview: String,
-    val popularity: Double
-)
