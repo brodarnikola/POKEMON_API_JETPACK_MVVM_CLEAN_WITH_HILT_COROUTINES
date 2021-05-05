@@ -58,6 +58,10 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
             pokemonViewModel.getAllPokemonDataFromLocalStorage()
         else
             pokemonViewModel.getPokemonData()
+
+        floatingButton.setOnClickListener {
+            Log.d(ContentValues.TAG, "AAAAA")
+        }
     }
 
     private fun successUpdateUi(pokemonData: MainPokemon) {
