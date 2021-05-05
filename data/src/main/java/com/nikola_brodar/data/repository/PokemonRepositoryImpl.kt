@@ -1,6 +1,6 @@
 package com.nikola_brodar.data.repository
 
-import com.nikola_brodar.data.database.WeatherDatabase
+import com.nikola_brodar.data.database.PokemonDatabase
 import com.nikola_brodar.data.database.mapper.DbMapper
 import com.nikola_brodar.data.networking.WeatherRepositoryApi
 import com.nikola_brodar.domain.model.*
@@ -11,7 +11,7 @@ import com.nikola_brodar.domain.repository.PokemonRepository
  */
 
 class PokemonRepositoryImpl constructor(
-    private val database: WeatherDatabase,
+    private val database: PokemonDatabase,
     private val service: WeatherRepositoryApi,
     private val dbMapper: DbMapper?
 ) : PokemonRepository {

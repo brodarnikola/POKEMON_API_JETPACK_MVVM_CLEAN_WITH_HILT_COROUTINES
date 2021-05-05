@@ -31,26 +31,55 @@
 package com.nikola_brodar.data.database.dao
 
 import androidx.room.*
-import com.nikola_brodar.data.database.model.DBWeather
+import com.nikola_brodar.data.database.model.DBMainPokemon
+import com.nikola_brodar.data.database.model.DBPokemonMoves
+import com.nikola_brodar.data.database.model.DBPokemonStats
+import com.nikola_brodar.data.database.model.DBPokemon
 
 @Dao
-interface WeatherDAO {
+interface PokemonDAO {
 
   @Query("SELECT * FROM weather_table")
-  fun getWeather(): List<DBWeather>
+  fun getWeather(): List<DBPokemon>
 
   @Transaction
-  fun updateWeather(weatherData: List<DBWeather>) {
+  fun updateWeather(pokemonData: List<DBPokemon>) {
     clearWeather()
-    insertAllWeatherData(weatherData)
+    insertAllWeatherData(pokemonData)
   }
 
   @Query("DELETE FROM weather_table")
   fun clearWeather()
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  fun insertAllWeatherData(articles: List<DBWeather>)
+  fun insertAllWeatherData(articles: List<DBPokemon>)
 
 
+  @Transaction
+  fun updatePokemon(pokemonData: List<DBPokemon>) {
+    clearWeather()
+    insertAllWeatherData(pokemonData)
+  }
+
+
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  suspend fun insertMainPokemonData(pokemon: DBMainPokemon)
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  suspend fun insertStatsPokemonData(pokemonStats: List<DBPokemonStats>)
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  suspend fun insertMovesPokemonData(pokemonMoves: List<DBPokemonMoves>)
+
+
+  @Query("SELECT * FROM pokemon_main_table")
+  suspend fun getSelectedMainPokemonData(): DBMainPokemon
+
+  @Query("SELECT * FROM pokemon_stats_table")
+  suspend fun getSelectedStatsPokemonData(): List<DBPokemonStats>
+
+  @Query("SELECT * FROM pokemon_moves_table")
+  suspend fun getSelectedMovesPokemonData(): List<DBPokemonMoves>
 
 }

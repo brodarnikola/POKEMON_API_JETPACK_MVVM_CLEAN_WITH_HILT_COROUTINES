@@ -10,20 +10,5 @@ data class ApiMainPokemon (
 
     val stats: List<ApiPokemonStats> = listOf(),
 
-    val forms: List<ApiPokemonForms> = listOf(),
-
-    @SerializedName("base_experience")
-    val baseExperience: Int = 0,
-
-    @SerializedName("weight")
-    val weight: Int = 0,
-
-
-//    val code: String = "",
-//
-//    @SerializedName("list")
-//    val forecastList: List<ApiForecastData> = listOf(),
-//    @SerializedName("city")
-//    val cityData: ApiCityData = ApiCityData(),
-
+    val moves: List<ApiPokemonMainMoves> = listOf(),
 )
