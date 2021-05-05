@@ -17,8 +17,8 @@
 package com.nikola_brodar.data.networking
 
 
-import com.nikola_brodar.data.networking.youtube.model.ApiAllPokemons
-import com.nikola_brodar.data.networking.youtube.model.ApiMainPokemon
+import com.nikola_brodar.data.networking.model.ApiAllPokemons
+import com.nikola_brodar.data.networking.model.ApiMainPokemon
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Headers
@@ -26,7 +26,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 
-interface WeatherRepositoryApi {
+interface PokemonRepositoryApi {
 
     @GET("pokemon")
     @Headers("Content-Type: application/json")

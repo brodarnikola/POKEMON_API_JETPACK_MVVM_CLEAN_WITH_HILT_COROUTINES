@@ -1,6 +1,4 @@
-package com.nikola_brodar.data.networking.youtube.model
-
-import com.google.gson.annotations.SerializedName
+package com.nikola_brodar.data.networking.model
 
 data class ApiAllPokemons (
 

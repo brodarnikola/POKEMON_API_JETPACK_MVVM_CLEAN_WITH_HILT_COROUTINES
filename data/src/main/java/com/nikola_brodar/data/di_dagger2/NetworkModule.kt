@@ -21,7 +21,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.nikola_brodar.data.BuildConfig
 import com.nikola_brodar.data.di_dagger2.PokemonNetwork
-import com.nikola_brodar.data.networking.WeatherRepositoryApi
+import com.nikola_brodar.data.networking.PokemonRepositoryApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -83,10 +83,10 @@ class NetworkModuleHilt {
     @Singleton
     @Provides
     @PokemonNetwork
-    fun provideWeatherService( @PokemonNetwork retrofit: Retrofit.Builder): WeatherRepositoryApi {
+    fun provideWeatherService( @PokemonNetwork retrofit: Retrofit.Builder): PokemonRepositoryApi {
         return retrofit
             .build()
-            .create(WeatherRepositoryApi::class.java)
+            .create(PokemonRepositoryApi::class.java)
     }
 
 }

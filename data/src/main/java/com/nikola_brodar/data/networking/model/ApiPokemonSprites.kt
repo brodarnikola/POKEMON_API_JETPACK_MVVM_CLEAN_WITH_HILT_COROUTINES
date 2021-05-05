@@ -1,4 +1,4 @@
-package com.nikola_brodar.data.networking.youtube.model
+package com.nikola_brodar.data.networking.model
 
 import com.google.gson.annotations.SerializedName
 

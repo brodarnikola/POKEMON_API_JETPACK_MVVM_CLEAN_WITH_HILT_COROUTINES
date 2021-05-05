@@ -1,28 +1,21 @@
 package com.nikola_brodar.pokemonapi.ui.activities
 
 import android.graphics.Typeface
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
-import com.nikola_brodar.data.networking.ConnectivityUtil
 import com.nikola_brodar.pokemonapi.App
 import com.nikola_brodar.pokemonapi.R
 import com.nikola_brodar.pokemonapi.connectivity.network.ConnectivityChangedEvent
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import javax.inject.Inject
 
 @AndroidEntryPoint
 open class BaseActivity(noWifiViewId: Int = 0) : AppCompatActivity() {
-
-    @Inject
-    lateinit var connectivityUtil: ConnectivityUtil
 
     protected var viewLoaded = false
 

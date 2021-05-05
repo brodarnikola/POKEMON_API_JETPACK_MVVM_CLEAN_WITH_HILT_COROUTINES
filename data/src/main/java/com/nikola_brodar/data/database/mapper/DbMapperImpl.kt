@@ -3,8 +3,8 @@ package com.nikola_brodar.data.database.mapper
 import com.nikola_brodar.data.database.model.DBMainPokemon
 import com.nikola_brodar.data.database.model.DBPokemonMoves
 import com.nikola_brodar.data.database.model.DBPokemonStats
-import com.nikola_brodar.data.networking.youtube.model.ApiAllPokemons
-import com.nikola_brodar.data.networking.youtube.model.ApiMainPokemon
+import com.nikola_brodar.data.networking.model.ApiAllPokemons
+import com.nikola_brodar.data.networking.model.ApiMainPokemon
 import com.nikola_brodar.domain.model.*
 
 class DbMapperImpl : DbMapper {

@@ -1,4 +1,4 @@
-package com.nikola_brodar.data.networking.youtube.model
+package com.nikola_brodar.data.networking.model
 
 data class ApiPokemonStatsName (
 
