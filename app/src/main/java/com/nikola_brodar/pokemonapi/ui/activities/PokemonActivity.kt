@@ -22,6 +22,8 @@ import kotlinx.android.synthetic.main.activity_pokemon.*
 
 class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
 
+    var displayCurrentPokemonData = false
+
     val pokemonViewModel: PokemonViewModel by viewModels()
 
     private lateinit var pokemonAdapter: PokemonAdapter
@@ -38,6 +40,8 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
 
         setSupportActionBar(findViewById(R.id.toolbarWeather))
         supportActionBar?.setDisplayShowTitleEnabled(false)
+
+        displayCurrentPokemonData = intent.getBooleanExtra("displayCurrentPokemonData", false)
     }
 
     override fun onStart() {
@@ -50,7 +54,10 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
             successUpdateUi(items)
         })
 
-        pokemonViewModel.getPokemonData(9)
+        if( displayCurrentPokemonData )
+            pokemonViewModel.getAllPokemonDataFromLocalStorage()
+        else
+            pokemonViewModel.getPokemonData(9)
     }
 
     private fun successUpdateUi(pokemonData: MainPokemon) {
@@ -72,11 +79,6 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(ivFront)
         pokemonAdapter.updateDevices(pokemonData.stats.toMutableList())
-    }
-
-    private fun printOutExceptionInsideLog(items: ResultState.Error) {
-        val exception = items.exception
-        Log.d(ContentValues.TAG, "Exception inside pokemon activity is: ${   exception}")
     }
 
     private fun initializeUi() {
