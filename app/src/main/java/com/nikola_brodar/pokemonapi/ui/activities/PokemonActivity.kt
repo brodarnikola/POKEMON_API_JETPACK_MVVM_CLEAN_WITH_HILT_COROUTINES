@@ -57,7 +57,7 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
         if( displayCurrentPokemonData )
             pokemonViewModel.getAllPokemonDataFromLocalStorage()
         else
-            pokemonViewModel.getPokemonData(9)
+            pokemonViewModel.getPokemonData()
     }
 
     private fun successUpdateUi(pokemonData: MainPokemon) {
