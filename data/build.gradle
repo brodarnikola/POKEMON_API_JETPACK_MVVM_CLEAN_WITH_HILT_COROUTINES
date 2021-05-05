@@ -79,9 +79,4 @@ dependencies {
     implementation "com.facebook.stetho:stetho:1.5.1"
     implementation "com.facebook.stetho:stetho-okhttp3:1.5.1"
 
-    // rxjava
-    implementation "io.reactivex.rxjava2:rxjava:$rxjavaVersion"
-    // RxAndroid
-    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
-
 }
