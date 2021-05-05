@@ -28,7 +28,6 @@ import com.nikola_brodar.data.database.PokemonDatabase
 import com.nikola_brodar.data.database.mapper.DbMapper
 import com.nikola_brodar.data.database.model.DBMainPokemon
 import com.nikola_brodar.data.database.model.DBPokemonMoves
-import com.nikola_brodar.data.database.model.DBPokemonStats
 import com.nikola_brodar.data.di_dagger2.WeatherNetwork
 import com.nikola_brodar.domain.ResultState
 import com.nikola_brodar.domain.model.*
@@ -36,6 +35,10 @@ import com.nikola_brodar.domain.repository.PokemonRepository
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 
@@ -54,49 +57,109 @@ class PokemonViewModel @ViewModelInject constructor(
     val pokemonMovesData: LiveData<List<DBPokemonMoves>> = _pokemonMovesMutableLiveData
 
     fun getPokemonMovesFromLocalStorage() {
-        Observable.fromCallable {
-            val listPokemonMove = getPokemonFromDB()
-            val response = DBPokemonMoves()
-            listPokemonMove
+        viewModelScope.launch {
+            val listPokemonMove = getPokemonMovesFromDB()
+            _pokemonMovesMutableLiveData.value = listPokemonMove
         }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext { listPokemonMove: List<DBPokemonMoves> ->
-                Log.i("Size of database", "Size when reading database is: ${listPokemonMove}")
-                _pokemonMovesMutableLiveData.value = listPokemonMove
-            }
-            .subscribe()
     }
 
-
-    private fun getPokemonFromDB(): List<DBPokemonMoves> {
+    private suspend fun getPokemonMovesFromDB(): List<DBPokemonMoves> {
         return dbPokemon.pokemonDAO().getSelectedMovesPokemonData()
     }
+
+    fun getAllPokemonDataFromLocalStorage() {
+        viewModelScope.launch {
+            val mainPokemonData = getAllPokemonDataFromRoom()
+            _pokemonMutableLiveData.value = mainPokemonData
+        }
+    }
+
+    private suspend fun getAllPokemonDataFromRoom(): MainPokemon {
+        val pokemonMain = dbPokemon.pokemonDAO().getSelectedMainPokemonData()
+        val pokemonStats = dbPokemon.pokemonDAO().getSelectedStatsPokemonData()
+        val pokemonMoves = dbPokemon.pokemonDAO().getSelectedMovesPokemonData()
+
+        val correctPokemonMain = MainPokemon()
+        correctPokemonMain.name = pokemonMain.name
+        correctPokemonMain.sprites.backDefault = pokemonMain.backDefault
+        correctPokemonMain.sprites.frontDefault = pokemonMain.frontDefault
+
+        correctPokemonMain.stats = dbMapper?.mapDbPokemonStatsToDbPokemonStats(pokemonStats) ?: listOf()
+        correctPokemonMain.moves = dbMapper?.mapDbPokemonMovesToDbPokemonMoves(pokemonMoves) ?: listOf()
+
+        return correctPokemonMain
+    }
+
 
     @SuppressLint("CheckResult")
     fun getPokemonData(id: Int) {
 
         viewModelScope.launch {
-            val allPokemonsData =
-                getAllPokemonData()
 
-            val randomPokemonUrl = allPokemonsData.results.random().url.split("/")
-            val id = randomPokemonUrl.get( randomPokemonUrl.size - 2 )
-            Log.d(
-                ContentValues.TAG,
-                "last id is: ${id.toInt()}"
-            )
-            val pokemonData = pokemonRepository.getRandomSelectedPokemon(id.toInt())
-            deleteAllPokemonData()
-            insertPokemonIntoDatabase(pokemonData)
-            _pokemonMutableLiveData.value = pokemonData
+            flowOf( getAllPokemonData() )
+                .onEach {
+                    val pokemonData = it
+                    val randomPokemonUrl = pokemonData.results.random().url.split("/")
+                    val id = randomPokemonUrl.get( randomPokemonUrl.size - 2 )
+                    Log.d(
+                        ContentValues.TAG,
+                        "Id is: ${id.toInt()}"
+                    )
+                    flowOf( pokemonRepository.getRandomSelectedPokemon(id.toInt()) )
+                        .map {
+
+                            deleteAllPokemonData()
+//                            val waitToDelete = deleteOldPokemonData.await()
+//
+//                            coroutineScope {
+//                                val deleteOldPokemonMain =
+//                                    async { dbPokemon.pokemonDAO().clearMainPokemonData() }
+//                                val deleteOldPokemonStats =
+//                                    async { dbPokemon.pokemonDAO().clearPokemonStatsData() }
+//                                val deleteOldPokemonDaMoves =
+//                                    async { dbPokemon.pokemonDAO().clearMPokemonMovesData() }
+//
+//                                deleteOldPokemonMain.await()
+//                                deleteOldPokemonStats.await()
+//                                deleteOldPokemonDaMoves.await()
+//                            }
+
+                            //deleteAllPokemonData()
+                            insertPokemonIntoDatabase(it)
+                            _pokemonMutableLiveData.value = it
+                        }.collect()
+
+                }
+                .launchIn(viewModelScope)
         }
+
+
+//        viewModelScope.launch {
+//            val allPokemonsData =
+//                getAllPokemonData()
+//
+//            val randomPokemonUrl = allPokemonsData.results.random().url.split("/")
+//            val id = randomPokemonUrl.get( randomPokemonUrl.size - 2 )
+//            Log.d(
+//                ContentValues.TAG,
+//                "last id is: ${id.toInt()}"
+//            )
+//            val pokemonData = pokemonRepository.getRandomSelectedPokemon(id.toInt())
+//            deleteAllPokemonData()
+//            insertPokemonIntoDatabase(pokemonData)
+//            _pokemonMutableLiveData.value = pokemonData
+//        }
     }
 
     private suspend fun deleteAllPokemonData() {
-        dbPokemon.pokemonDAO().clearMainPokemonData()
-        dbPokemon.pokemonDAO().clearPokemonStatsData()
-        dbPokemon.pokemonDAO().clearMPokemonMovesData()
+        coroutineScope {
+            val deferreds = listOf(
+                async { dbPokemon.pokemonDAO().clearMainPokemonData() },
+                async { dbPokemon.pokemonDAO().clearPokemonStatsData() },
+                async { dbPokemon.pokemonDAO().clearMPokemonMovesData() }
+            )
+            deferreds.awaitAll()
+        }
     }
 
     private suspend fun insertPokemonIntoDatabase(pokemonData: MainPokemon) {

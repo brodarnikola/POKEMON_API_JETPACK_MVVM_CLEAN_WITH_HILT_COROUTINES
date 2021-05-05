@@ -35,6 +35,7 @@ import com.nikola_brodar.data.database.model.DBMainPokemon
 import com.nikola_brodar.data.database.model.DBPokemonMoves
 import com.nikola_brodar.data.database.model.DBPokemonStats
 import com.nikola_brodar.data.database.model.DBPokemon
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PokemonDAO {
@@ -88,6 +89,6 @@ interface PokemonDAO {
   suspend fun getSelectedStatsPokemonData(): List<DBPokemonStats>
 
   @Query("SELECT * FROM pokemon_moves_table")
-  fun getSelectedMovesPokemonData(): List<DBPokemonMoves>
+  suspend fun getSelectedMovesPokemonData(): List<DBPokemonMoves>
 
 }

@@ -16,19 +16,11 @@
         android:orientation="vertical"
         android:padding="5dp">
 
-        <View
-            android:id="@+id/viewTopSeparator"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/colorAccent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <TextView
             android:id="@+id/tvTemp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_marginTop="5dp"
             android:ellipsize="end"
             android:maxLines="2"
@@ -36,7 +28,7 @@
             android:textColor="@android:color/background_dark"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/tvMax"
-            app:layout_constraintTop_toBottomOf="@+id/viewTopSeparator" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvMax"

@@ -91,6 +91,7 @@ class PokemonMovesActivity : BaseActivity(R.id.no_internet_layout) {
         when (item.itemId) {
             android.R.id.home -> {
                 val intent = Intent(this, PokemonActivity::class.java)
+                intent.putExtra("displayCurrentPokemonData", true)
                 startActivity(intent)
                 finish()
                 return true
@@ -101,6 +102,7 @@ class PokemonMovesActivity : BaseActivity(R.id.no_internet_layout) {
 
     override fun onBackPressed() {
         val intent = Intent(this, PokemonActivity::class.java)
+        intent.putExtra("displayCurrentPokemonData", true)
         startActivity(intent)
         finish()
         super.onBackPressed()
