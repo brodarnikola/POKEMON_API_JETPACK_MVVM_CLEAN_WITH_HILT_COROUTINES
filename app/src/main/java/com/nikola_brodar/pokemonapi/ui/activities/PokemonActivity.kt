@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ProgressBar
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +17,8 @@ import com.nikola_brodar.pokemonapi.R
 import com.nikola_brodar.pokemonapi.databinding.ActivityPokemonBinding
 import com.nikola_brodar.pokemonapi.ui.adapters.PokemonAdapter
 import com.nikola_brodar.pokemonapi.viewmodels.PokemonViewModel
+import com.nikola_brodar.pokemonapi.ui.utilities.hide
+import com.nikola_brodar.pokemonapi.ui.utilities.show
 import kotlinx.android.synthetic.main.activity_pokemon.*
 
 
@@ -59,7 +62,7 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
             pokemonViewModel.getPokemonData()
 
         floatingButton.setOnClickListener {
-            hideProgressBar()
+            showProgressBar()
             hideAllPreviousPokemonData()
             clearAdapter()
             pokemonViewModel.getPokemonData()
@@ -93,7 +96,11 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
     }
 
     private fun hideProgressBar() {
-        binding.progressBar.visibility = View.GONE
+        progressBar.hide()
+    }
+
+    private fun showProgressBar() {
+        progressBar.show()
     }
 
     private fun hideAllPreviousPokemonData() {
