@@ -11,10 +11,14 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nikola_brodar.data.database.model.DBPokemonMoves
+import com.nikola_brodar.domain.ResultState
 import com.nikola_brodar.pokemonapi.R
 import com.nikola_brodar.pokemonapi.databinding.ActivityPokemonMovesBinding
 import com.nikola_brodar.pokemonapi.ui.adapters.PokemonMovesAdapter
+import com.nikola_brodar.pokemonapi.ui.utilities.hide
+import com.nikola_brodar.pokemonapi.ui.utilities.show
 import com.nikola_brodar.pokemonapi.viewmodels.PokemonViewModel
+import kotlinx.android.synthetic.main.activity_pokemon.*
 
 
 class PokemonMovesActivity : BaseActivity(R.id.no_internet_layout) {
@@ -45,10 +49,47 @@ class PokemonMovesActivity : BaseActivity(R.id.no_internet_layout) {
         initializeUi()
 
         pokemonViewModel.pokemonMovesData.observe(this, Observer { items ->
-            successUpdateUi(items)
+            when( items ) {
+                is ResultState.Loading -> {
+                    showProgressBar()
+                    hideAllUiElements()
+                }
+
+                is ResultState.Success -> {
+                    hideProgressBar()
+                    displayAllUiElements()
+                    successUpdateUi(items.data as List<DBPokemonMoves> )
+                }
+                is ResultState.Error -> {
+                    hideProgressBar()
+                    somethingWentWrong(items)
+                }
+            }
         })
 
         pokemonViewModel.getPokemonMovesFromLocalStorage()
+    }
+
+    fun hideAllUiElements() {
+        binding.tvTotalNumber.visibility = View.GONE
+        binding.pokemonList.visibility = View.GONE
+    }
+
+    fun displayAllUiElements() {
+        binding.tvTotalNumber.visibility = View.VISIBLE
+        binding.pokemonList.visibility = View.VISIBLE
+    }
+
+    private fun hideProgressBar() {
+        progressBar.hide()
+    }
+
+    private fun showProgressBar() {
+        progressBar.show()
+    }
+
+    private fun somethingWentWrong(items: ResultState.Error) {
+        showSnackbarSync( items.message + items.exception.toString(), true, binding.mainLayout )
     }
 
     private fun successUpdateUi(pokemonData: List<DBPokemonMoves>) {

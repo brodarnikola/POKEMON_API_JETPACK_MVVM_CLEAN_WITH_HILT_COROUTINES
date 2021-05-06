@@ -32,11 +32,8 @@ import com.nikola_brodar.domain.model.AllPokemons
 import com.nikola_brodar.domain.model.MainPokemon
 import com.nikola_brodar.domain.repository.PokemonRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -50,19 +47,25 @@ class PokemonViewModel @Inject constructor(
 
     val mainPokemonData: LiveData<ResultState<*>> = _pokemonMutableLiveData
 
-    private val _pokemonMovesMutableLiveData: MutableLiveData<List<DBPokemonMoves>> = MutableLiveData()
+    private val _pokemonMovesMutableLiveData: MutableLiveData<ResultState<*>> = MutableLiveData()
 
-    val pokemonMovesData: LiveData<List<DBPokemonMoves>> = _pokemonMovesMutableLiveData
+    val pokemonMovesData: LiveData<ResultState<*>> = _pokemonMovesMutableLiveData
 
     fun getPokemonMovesFromLocalStorage() {
         viewModelScope.launch {
+            val loading = ResultState.Loading
+            _pokemonMovesMutableLiveData.value = loading
             val listPokemonMove = getPokemonMovesFromDB()
             _pokemonMovesMutableLiveData.value = listPokemonMove
         }
     }
 
-    private suspend fun getPokemonMovesFromDB(): List<DBPokemonMoves> {
-        return dbPokemon.pokemonDAO().getSelectedMovesPokemonData()
+    private suspend fun getPokemonMovesFromDB(): ResultState<*> {
+
+        val pokemonsMovesList = dbPokemon.pokemonDAO().getSelectedMovesPokemonData()
+        if( pokemonsMovesList.isNotEmpty() )
+            return ResultState.Success(pokemonsMovesList)
+        return ResultState.Error("Something went wrong when reading data from database", null)
     }
 
     fun getAllPokemonDataFromLocalStorage() {
@@ -93,6 +96,8 @@ class PokemonViewModel @Inject constructor(
 
         viewModelScope.launch {
 
+            val loading = ResultState.Loading
+            _pokemonMutableLiveData.value = loading
             flowOf( getAllPokemonData() )
                 .onEach {  allPokemons ->
                     when( allPokemons ) {
