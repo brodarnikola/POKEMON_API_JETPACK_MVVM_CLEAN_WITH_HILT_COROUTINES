@@ -38,7 +38,7 @@ buildscript {
         daggerVersion = DAGGER2_VERSION
         assistedInjectVersion = '0.5.2'
 
-        hiltVersion = '2.35'
+        hiltVersion = '2.35.1'
         hiltViewModelVersion = '1.0.0-alpha02'
     }
 
