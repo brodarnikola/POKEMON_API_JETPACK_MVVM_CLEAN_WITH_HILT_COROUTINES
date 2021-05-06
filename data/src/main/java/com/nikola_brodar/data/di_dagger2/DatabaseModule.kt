@@ -22,10 +22,10 @@ import com.nikola_brodar.data.database.dao.PokemonDAO
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 @Module
 class DatabaseModule {
 
@@ -33,6 +33,7 @@ class DatabaseModule {
     @Provides
     fun provideAppDatabase( app: Application) = PokemonDatabase.create(app)
 
+    @Singleton
     @Provides
     fun providePlantDao(pokemonDatabase: PokemonDatabase): PokemonDAO {
         return pokemonDatabase.pokemonDAO()

@@ -25,7 +25,7 @@ import com.nikola_brodar.data.networking.PokemonRepositoryApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -37,11 +37,12 @@ import javax.inject.Singleton
 private const val RETROFIT_BASE_URL = "https://pokeapi.co/api/v2/"
 
 @Module
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 class NetworkModuleHilt {
 
 
     @Provides
+    @Singleton
     @PokemonNetwork
     fun provideLoggingInterceptor() =
         HttpLoggingInterceptor().apply { level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE }

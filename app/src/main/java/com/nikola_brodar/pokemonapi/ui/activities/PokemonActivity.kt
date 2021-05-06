@@ -71,6 +71,7 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
 
     private fun clearAdapter() {
         pokemonAdapter.pokemonStatsList.clear()
+        pokemonAdapter.notifyDataSetChanged()
     }
 
     private fun successUpdateUi(pokemonData: MainPokemon) {

@@ -18,7 +18,6 @@ package com.nikola_brodar.pokemonapi.viewmodels
 
 import android.content.ContentValues
 import android.util.Log
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -31,14 +30,16 @@ import com.nikola_brodar.data.di_dagger2.PokemonNetwork
 import com.nikola_brodar.domain.model.AllPokemons
 import com.nikola_brodar.domain.model.MainPokemon
 import com.nikola_brodar.domain.repository.PokemonRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-
-class PokemonViewModel @ViewModelInject constructor(
+@HiltViewModel
+class PokemonViewModel @Inject constructor(
     @PokemonNetwork private val pokemonRepository: PokemonRepository,
     private val dbPokemon: PokemonDatabase,
     private val dbMapper: DbMapper?
