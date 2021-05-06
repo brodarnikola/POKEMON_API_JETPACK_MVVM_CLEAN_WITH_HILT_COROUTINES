@@ -27,6 +27,7 @@ import com.nikola_brodar.data.database.mapper.DbMapper
 import com.nikola_brodar.data.database.model.DBMainPokemon
 import com.nikola_brodar.data.database.model.DBPokemonMoves
 import com.nikola_brodar.data.di_dagger2.PokemonNetwork
+import com.nikola_brodar.domain.ResultState
 import com.nikola_brodar.domain.model.AllPokemons
 import com.nikola_brodar.domain.model.MainPokemon
 import com.nikola_brodar.domain.repository.PokemonRepository
@@ -45,9 +46,9 @@ class PokemonViewModel @Inject constructor(
     private val dbMapper: DbMapper?
 ) : ViewModel() {
 
-    private val _pokemonMutableLiveData: MutableLiveData<MainPokemon> = MutableLiveData()
+    private val _pokemonMutableLiveData: MutableLiveData<ResultState<*>> = MutableLiveData()
 
-    val mainPokemonData: LiveData<MainPokemon> = _pokemonMutableLiveData
+    val mainPokemonData: LiveData<ResultState<*>> = _pokemonMutableLiveData
 
     private val _pokemonMovesMutableLiveData: MutableLiveData<List<DBPokemonMoves>> = MutableLiveData()
 
@@ -67,7 +68,8 @@ class PokemonViewModel @Inject constructor(
     fun getAllPokemonDataFromLocalStorage() {
         viewModelScope.launch {
             val mainPokemonData = getAllPokemonDataFromRoom()
-            _pokemonMutableLiveData.value = mainPokemonData
+            val successPokemonData = ResultState.Success(mainPokemonData)
+            _pokemonMutableLiveData.value = successPokemonData
         }
     }
 
@@ -92,22 +94,39 @@ class PokemonViewModel @Inject constructor(
         viewModelScope.launch {
 
             flowOf( getAllPokemonData() )
-                .onEach {
-                    val pokemonData = it
-                    val randomPokemonUrl = pokemonData.results.random().url.split("/")
-                    val pokemonId = randomPokemonUrl.get( randomPokemonUrl.size - 2 )
-                    Log.d(
-                        ContentValues.TAG,
-                        "Id is: ${pokemonId.toInt()}"
-                    )
-                    flowOf( pokemonRepository.getRandomSelectedPokemon(pokemonId.toInt()) )
-                        .map {
+                .onEach {  allPokemons ->
+                    when( allPokemons ) {
+                        is ResultState.Success -> {
+                            val randomPokemonUrl = allPokemons.data as AllPokemons
+                            val separateString = randomPokemonUrl.results.random().url.split("/")
+                            val pokemonId = separateString.get( separateString.size - 2 )
+                            Log.d(
+                                ContentValues.TAG,
+                                "Id is: ${pokemonId.toInt()}"
+                            )
+                            flowOf( pokemonRepository.getRandomSelectedPokemon(pokemonId.toInt()) )
+                                .map { randomSelectedPokemon ->
+                                    when( randomSelectedPokemon )  {
+                                        is ResultState.Success -> {
+                                            deleteAllPokemonData()
+                                            insertPokemonIntoDatabase(randomSelectedPokemon.data as MainPokemon)
+                                            _pokemonMutableLiveData.value = randomSelectedPokemon
+                                        }
+                                        is ResultState.Error -> {
+                                            _pokemonMutableLiveData.value = randomSelectedPokemon
+                                        }
+                                    }
+                                }.collect()
 
-                            deleteAllPokemonData()
-                            insertPokemonIntoDatabase(it)
-                            _pokemonMutableLiveData.value = it
-                        }.collect()
-
+                        }
+                        is ResultState.Error -> {
+                            _pokemonMutableLiveData.value = allPokemons
+                        }
+                        else -> {
+                            val errorDefault = ResultState.Error("", null)
+                            _pokemonMutableLiveData.value = errorDefault
+                        }
+                    }
                 }
                 .launchIn(viewModelScope)
         }
@@ -139,7 +158,7 @@ class PokemonViewModel @Inject constructor(
         dbPokemon.pokemonDAO().insertMovesPokemonData(pokemonMoves)
     }
 
-    private suspend fun getAllPokemonData(): AllPokemons {
+    private suspend fun getAllPokemonData(): ResultState<*> {
         return pokemonRepository.getAllPokemons(100, 0)
     }
 

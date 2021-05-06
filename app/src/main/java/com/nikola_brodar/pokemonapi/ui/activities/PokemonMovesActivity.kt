@@ -22,7 +22,7 @@ class PokemonMovesActivity : BaseActivity(R.id.no_internet_layout) {
     val pokemonViewModel: PokemonViewModel by viewModels()
 
     private lateinit var pokemonAdapter: PokemonMovesAdapter
-    var weatherLayoutManager: LinearLayoutManager? = null
+    var pokemonLayoutManager: LinearLayoutManager? = null
 
     private lateinit var binding: ActivityPokemonMovesBinding
 
@@ -65,7 +65,7 @@ class PokemonMovesActivity : BaseActivity(R.id.no_internet_layout) {
 
     private fun initializeUi() {
 
-        weatherLayoutManager = LinearLayoutManager(
+        pokemonLayoutManager = LinearLayoutManager(
             this@PokemonMovesActivity,
             RecyclerView.VERTICAL,
             false
@@ -74,7 +74,7 @@ class PokemonMovesActivity : BaseActivity(R.id.no_internet_layout) {
         pokemonAdapter = PokemonMovesAdapter(mutableListOf())
 
         binding.pokemonList.apply {
-            layoutManager = weatherLayoutManager
+            layoutManager = pokemonLayoutManager
             adapter = pokemonAdapter
         }
         binding.pokemonList.adapter = pokemonAdapter

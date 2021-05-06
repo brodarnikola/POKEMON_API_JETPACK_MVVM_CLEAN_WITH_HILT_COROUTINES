@@ -5,13 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.ProgressBar
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.nikola_brodar.domain.ResultState
 import com.nikola_brodar.domain.model.MainPokemon
 import com.nikola_brodar.pokemonapi.R
 import com.nikola_brodar.pokemonapi.databinding.ActivityPokemonBinding
@@ -29,7 +29,7 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
     val pokemonViewModel: PokemonViewModel by viewModels()
 
     private lateinit var pokemonAdapter: PokemonAdapter
-    var weatherLayoutManager: LinearLayoutManager? = null
+    var pokemonLayoutManager: LinearLayoutManager? = null
 
     private lateinit var binding: ActivityPokemonBinding
 
@@ -53,7 +53,24 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
         initializeUi()
 
         pokemonViewModel.mainPokemonData.observe(this, Observer { items ->
-            successUpdateUi(items)
+
+            when( items ) {
+                is ResultState.Loading -> {
+                    showProgressBar()
+                    hideAllUiElements()
+                }
+                is ResultState.Success -> {
+                    clearAdapter()
+                    hideProgressBar()
+                    displayAllUiElements()
+                    successUpdateUiWithData(items.data as MainPokemon)
+                }
+                is ResultState.Error -> {
+                    hideProgressBar()
+                    displayAllUiElements()
+                    somethingWentWrong(items)
+                }
+            }
         })
 
         if( displayCurrentPokemonData )
@@ -63,10 +80,13 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
 
         floatingButton.setOnClickListener {
             showProgressBar()
-            hideAllPreviousPokemonData()
-            clearAdapter()
+            hideAllUiElements()
             pokemonViewModel.getPokemonData()
         }
+    }
+
+    private fun somethingWentWrong(items: ResultState.Error) {
+        showSnackbarSync( items.message + items.exception.toString(), true, binding.mainLayout )
     }
 
     private fun clearAdapter() {
@@ -74,10 +94,10 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
         pokemonAdapter.notifyDataSetChanged()
     }
 
-    private fun successUpdateUi(pokemonData: MainPokemon) {
+    private fun successUpdateUiWithData(pokemonData: MainPokemon) {
+
         Log.d(ContentValues.TAG, "Data is: ${pokemonData.stats.joinToString { "-" + it.stat.name }}")
-        hideProgressBar()
-        makeVisibleAllElements()
+
         tvName.text = "Name: " + pokemonData.name
 
         Glide.with(this)
@@ -93,6 +113,7 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
             .error(R.drawable.garden_tab_selector)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(ivFront)
+
         pokemonAdapter.updateDevices(pokemonData.stats.toMutableList())
     }
 
@@ -104,14 +125,14 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
         progressBar.show()
     }
 
-    private fun hideAllPreviousPokemonData() {
+    private fun hideAllUiElements() {
         binding.tvName.visibility = View.GONE
         binding.ivBack.visibility = View.GONE
         binding.ivFront.visibility = View.GONE
         binding.pokemonList.visibility = View.GONE
     }
 
-    private fun makeVisibleAllElements() {
+    private fun displayAllUiElements() {
         binding.tvName.visibility = View.VISIBLE
         binding.ivBack.visibility = View.VISIBLE
         binding.ivFront.visibility = View.VISIBLE
@@ -120,12 +141,12 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
 
     private fun initializeUi() {
 
-        weatherLayoutManager = LinearLayoutManager(this@PokemonActivity, RecyclerView.VERTICAL, false)
+        pokemonLayoutManager = LinearLayoutManager(this@PokemonActivity, RecyclerView.VERTICAL, false)
 
         pokemonAdapter = PokemonAdapter( mutableListOf() )
 
         binding.pokemonList.apply {
-            layoutManager = weatherLayoutManager
+            layoutManager = pokemonLayoutManager
             adapter = pokemonAdapter
         }
         binding.pokemonList.adapter = pokemonAdapter

@@ -46,9 +46,9 @@ open class BaseActivity(noWifiViewId: Int = 0) : AppCompatActivity() {
     }
 
     fun updateConnectivityUi() {
-        if (noWifiFrame != null ) {
-            noWifiFrame?.visibility = if (networkAvailable) View.GONE else View.VISIBLE
-        }
+//        if (noWifiFrame != null ) {
+//            noWifiFrame?.visibility = if (networkAvailable) View.GONE else View.VISIBLE
+//        }
     }
 
     fun showSnackbarSync(message: String, isLong: Boolean, mainContentRoot: View) {
@@ -66,8 +66,8 @@ open class BaseActivity(noWifiViewId: Int = 0) : AppCompatActivity() {
         val snackbarText = snackbarView.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
         snackbarText.setTypeface(Typeface.DEFAULT, Typeface.BOLD)
         snackbarText.setTextColor(textColor)
-        snackbarText.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
-        snackbarText.textSize = 19f
+        snackbarText.textAlignment = TextView.TEXT_ALIGNMENT_TEXT_START
+        snackbarText.textSize = 17f
         snackbar.show()
     }
 
