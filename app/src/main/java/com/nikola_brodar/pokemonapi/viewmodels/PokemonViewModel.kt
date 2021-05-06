@@ -97,15 +97,11 @@ class PokemonViewModel @Inject constructor(
                 .onEach {  allPokemons ->
                     when( allPokemons ) {
                         is ResultState.Success -> {
-                            val randomPokemonUrl = allPokemons.data as AllPokemons
-                            val separateString = randomPokemonUrl.results.random().url.split("/")
-                            val pokemonId = separateString.get( separateString.size - 2 )
-                            Log.d(
-                                ContentValues.TAG,
-                                "Id is: ${pokemonId.toInt()}"
-                            )
-                            flowOf( pokemonRepository.getRandomSelectedPokemon(pokemonId.toInt()) )
+
+                            val pokemonID = getRandomSelectedPokemonId(allPokemons)
+                            flowOf( pokemonRepository.getRandomSelectedPokemon(pokemonID) )
                                 .map { randomSelectedPokemon ->
+
                                     when( randomSelectedPokemon )  {
                                         is ResultState.Success -> {
                                             deleteAllPokemonData()
@@ -117,7 +113,6 @@ class PokemonViewModel @Inject constructor(
                                         }
                                     }
                                 }.collect()
-
                         }
                         is ResultState.Error -> {
                             _pokemonMutableLiveData.value = allPokemons
@@ -130,6 +125,17 @@ class PokemonViewModel @Inject constructor(
                 }
                 .launchIn(viewModelScope)
         }
+    }
+
+    private fun getRandomSelectedPokemonId(allPokemons: ResultState.Success<*>) : Int {
+        val randomPokemonUrl = allPokemons.data as AllPokemons
+        val separateString = randomPokemonUrl.results.random().url.split("/")
+        val pokemonId = separateString.get( separateString.size - 2 )
+        Log.d(
+            ContentValues.TAG,
+            "Id is: ${pokemonId.toInt()}"
+        )
+        return pokemonId.toInt()
     }
 
     private suspend fun deleteAllPokemonData() {
