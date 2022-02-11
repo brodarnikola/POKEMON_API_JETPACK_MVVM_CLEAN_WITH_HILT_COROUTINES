@@ -160,7 +160,6 @@ class PokemonActivity : BaseActivity(R.id.no_internet_layout) {
         binding.btnNewFlowHildStyleProgramming.setOnClickListener {
             val intent = Intent(this, PokemonNewFlowHiltActivity::class.java)
             startActivity(intent)
-            finish()
         }
     }
 

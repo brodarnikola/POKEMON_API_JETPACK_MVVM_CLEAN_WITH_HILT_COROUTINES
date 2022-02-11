@@ -16,6 +16,7 @@
 
 package com.nikola_brodar.domain.repository
 
+import kotlinx.coroutines.flow.Flow
 import com.nikola_brodar.domain.ResultState
 import com.nikola_brodar.domain.model.*
 
@@ -23,6 +24,8 @@ import com.nikola_brodar.domain.model.*
 interface PokemonRepository {
 
     suspend fun getAllPokemons(limit: Int, offset: Int) : ResultState<*> //AllPokemons
+
+    fun getAllPokemonsNewFlow(limit: Int, offset: Int) : Flow<ResultState<*>> //AllPokemons
 
     suspend fun getRandomSelectedPokemon(id: Int) : ResultState<*> //MainPokemon
 

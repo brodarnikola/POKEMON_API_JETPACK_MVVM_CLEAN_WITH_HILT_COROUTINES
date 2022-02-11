@@ -16,21 +16,32 @@
 
 package com.nikola_brodar.data.di
 
+import com.nikola_brodar.data.database.PokemonDatabase
 import com.nikola_brodar.data.database.mapper.DbMapper
-import com.nikola_brodar.data.database.mapper.DbMapperImpl
+import com.nikola_brodar.data.networking.PokemonRepositoryApi
+import com.nikola_brodar.data.repository.PokemonRepositoryImpl
+import com.nikola_brodar.domain.repository.PokemonRepository
+import com.nikola_brodar.domain.usecase.PokemonUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
-class MapperModule {
+@InstallIn(ViewModelComponent::class)
+class UseCaseModule {
+
+//    @Provides
+//    @ViewModelScoped
+//    fun provideAllDataFromRestApiNetworkOrFromRoom(pokemonDatabase: PokemonDatabase, pokemonRepositoryApi: PokemonRepositoryApi, dbMapper : DbMapper) : PokemonRepository {
+//        return PokemonRepositoryImpl(pokemonDatabase, pokemonRepositoryApi, dbMapper)
+//    }
 
     @Provides
-    fun provideMapper( ) : DbMapper {
-        return DbMapperImpl()
-    }
+    @ViewModelScoped
+    fun provideGetAllPokemons(pokemonRepository: PokemonRepository) = PokemonUseCase(pokemonRepository)
 
 }
