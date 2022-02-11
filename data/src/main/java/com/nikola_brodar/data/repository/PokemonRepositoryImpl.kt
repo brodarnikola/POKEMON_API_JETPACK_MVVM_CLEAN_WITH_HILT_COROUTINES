@@ -4,12 +4,15 @@ import android.content.ContentValues
 import android.util.Log
 import com.nikola_brodar.data.database.PokemonDatabase
 import com.nikola_brodar.data.database.mapper.DbMapper
+import com.nikola_brodar.data.database.model.DBMainPokemon
 import com.nikola_brodar.data.networking.PokemonRepositoryApi
 import com.nikola_brodar.domain.ResultState
 import com.nikola_brodar.domain.model.*
 import com.nikola_brodar.domain.repository.PokemonRepository
 import com.vjezba.data.lego.api.BaseDataSource
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.*
 
 /**
@@ -17,10 +20,18 @@ import kotlinx.coroutines.flow.*
  */
 
 class PokemonRepositoryImpl constructor(
-    private val database: PokemonDatabase,
+    private val dbPokemon: PokemonDatabase,
     private val service: PokemonRepositoryApi,
     private val dbMapper: DbMapper?
 ) : PokemonRepository, BaseDataSource() {
+
+    override fun getAllPokemonMovesFromDB(): Flow<ResultState<*>> = flow {
+
+        val pokemonsMovesList = dbPokemon.pokemonDAO().getSelectedMovesPokemonData()
+        if (pokemonsMovesList.isNotEmpty())
+            emit(ResultState.Success(pokemonsMovesList))
+        emit(ResultState.Error("Something went wrong when reading data from database", null))
+    }
 
     override fun getAllPokemonsNewFlow(limit: Int, offset: Int): Flow<ResultState<*>> =
         flow {
@@ -37,12 +48,12 @@ class PokemonRepositoryImpl constructor(
                     when (randomPokemonResult) {
                         is ResultState.Success -> {
 
-                            val correctResult = dbMapper?.mapApiPokemonToDomainPokemon(randomPokemonResult.data)
+                            val correctResult =
+                                dbMapper?.mapApiPokemonToDomainPokemon(randomPokemonResult.data)
                             System.out.println("Will it enter here${correctResult}")
+                            deleteAllPokemonData()
+                            insertPokemonIntoDatabase(correctResult as MainPokemon)
                             emit((ResultState.Success(correctResult)))
-//                                    deleteAllPokemonData()
-//                                    insertPokemonIntoDatabase(randomSelectedPokemon.data as MainPokemon)
-//                                    _pokemonMutableLiveData.value = randomSelectedPokemon
                         }
                         is ResultState.Error -> {
                             emit(
@@ -51,7 +62,6 @@ class PokemonRepositoryImpl constructor(
                                     randomPokemonResult.exception
                                 )
                             )
-                            //  _pokemonMutableLiveData.value = randomSelectedPokemon
                         }
                     }
 
@@ -75,6 +85,34 @@ class PokemonRepositoryImpl constructor(
                 }
             }
         }
+
+    private suspend fun deleteAllPokemonData() {
+        coroutineScope {
+            val deferreds = listOf(
+                async { dbPokemon.pokemonDAO().clearMainPokemonData() },
+                async { dbPokemon.pokemonDAO().clearPokemonStatsData() },
+                async { dbPokemon.pokemonDAO().clearMPokemonMovesData() }
+            )
+            deferreds.awaitAll()
+        }
+    }
+
+
+    private suspend fun insertPokemonIntoDatabase(pokemonData: MainPokemon) {
+
+        val pokemonMain =
+            dbMapper?.mapDomainMainPokemonToDBMainPokemon(pokemonData) ?: DBMainPokemon()
+        dbPokemon.pokemonDAO().insertMainPokemonData(pokemonMain)
+
+        val pokemonStats =
+            dbMapper?.mapDomainPokemonStatsToDbPokemonStats(pokemonData.stats) ?: listOf()
+        dbPokemon.pokemonDAO().insertStatsPokemonData(pokemonStats)
+
+        val pokemonMoves =
+            dbMapper?.mapDomainPokemonMovesToDbPokemonMoves(pokemonData.moves) ?: listOf()
+        dbPokemon.pokemonDAO().insertMovesPokemonData(pokemonMoves)
+    }
+
 
     private fun getRandomSelectedPokemonId(allPokemons: AllPokemons): Int {
         val separateString = allPokemons.results.random().url.split("/")

@@ -21,6 +21,7 @@ import com.nikola_brodar.data.database.mapper.DbMapper
 import com.nikola_brodar.data.networking.PokemonRepositoryApi
 import com.nikola_brodar.data.repository.PokemonRepositoryImpl
 import com.nikola_brodar.domain.repository.PokemonRepository
+import com.nikola_brodar.domain.usecase.PokemonMovesUseCase
 import com.nikola_brodar.domain.usecase.PokemonUseCase
 import dagger.Module
 import dagger.Provides
@@ -34,14 +35,12 @@ import javax.inject.Singleton
 @InstallIn(ViewModelComponent::class)
 class UseCaseModule {
 
-//    @Provides
-//    @ViewModelScoped
-//    fun provideAllDataFromRestApiNetworkOrFromRoom(pokemonDatabase: PokemonDatabase, pokemonRepositoryApi: PokemonRepositoryApi, dbMapper : DbMapper) : PokemonRepository {
-//        return PokemonRepositoryImpl(pokemonDatabase, pokemonRepositoryApi, dbMapper)
-//    }
-
     @Provides
     @ViewModelScoped
     fun provideGetAllPokemons(pokemonRepository: PokemonRepository) = PokemonUseCase(pokemonRepository)
+
+    @Provides
+    @ViewModelScoped
+    fun provideGetAllPokemonMovesFromDB(pokemonRepository: PokemonRepository) = PokemonMovesUseCase(pokemonRepository)
 
 }

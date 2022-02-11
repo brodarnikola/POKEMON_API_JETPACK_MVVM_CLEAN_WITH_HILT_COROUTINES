@@ -5,6 +5,7 @@
       <map>
         <entry key="app/src/main/res/layout/activity_pokemon.xml" value="0.5140398550724637" />
         <entry key="app/src/main/res/layout/activity_pokemon_moves.xml" value="0.7635869565217391" />
+        <entry key="app/src/main/res/layout/activity_pokemon_moves_new_flow_hilt.xml" value="0.157548125633232" />
         <entry key="app/src/main/res/layout/activity_pokemon_new_flow_hilt_style.xml" value="0.32395833333333335" />
       </map>
     </option>

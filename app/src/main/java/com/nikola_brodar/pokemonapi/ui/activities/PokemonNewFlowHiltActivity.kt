@@ -152,7 +152,7 @@ class PokemonNewFlowHiltActivity : BaseActivity(R.id.no_internet_layout) {
         binding.pokemonList.adapter = pokemonAdapter
 
         binding.btnRoomOldWeatherData.setOnClickListener {
-            val intent = Intent(this, PokemonMovesActivity::class.java)
+            val intent = Intent(this, PokemonMovesNewFlowHiltActivity::class.java)
             startActivity(intent)
             finish()
         }

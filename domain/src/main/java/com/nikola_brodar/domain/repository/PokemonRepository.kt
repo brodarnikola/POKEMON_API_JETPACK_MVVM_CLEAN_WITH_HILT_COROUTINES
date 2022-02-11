@@ -25,9 +25,12 @@ interface PokemonRepository {
 
     suspend fun getAllPokemons(limit: Int, offset: Int) : ResultState<*> //AllPokemons
 
-    fun getAllPokemonsNewFlow(limit: Int, offset: Int) : Flow<ResultState<*>> //AllPokemons
-
     suspend fun getRandomSelectedPokemon(id: Int) : ResultState<*> //MainPokemon
 
+
+    // new flow with hilt
+    fun getAllPokemonsNewFlow(limit: Int, offset: Int) : Flow<ResultState<*>> //AllPokemons
+
+    fun getAllPokemonMovesFromDB() : Flow<ResultState<*>>
 
 }

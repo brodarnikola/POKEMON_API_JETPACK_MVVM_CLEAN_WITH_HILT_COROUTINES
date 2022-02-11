@@ -9,3 +9,7 @@ class PokemonUseCase(private val pokemonRepository: PokemonRepository) {
     fun execute() : Flow<ResultState<*>> = pokemonRepository.getAllPokemonsNewFlow(100, 0)
 
 }
+
+class PokemonMovesUseCase(private val pokemonRepository: PokemonRepository) {
+    fun execute() : Flow<ResultState<*>> = pokemonRepository.getAllPokemonMovesFromDB()
+}

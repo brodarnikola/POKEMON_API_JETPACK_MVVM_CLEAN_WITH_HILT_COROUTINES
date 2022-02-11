@@ -47,27 +47,6 @@ class PokemonNewFlowHiltViewModel @Inject constructor(
 
     val mainPokemonData: LiveData<ResultState<*>> = _pokemonMutableLiveData
 
-    private val _pokemonMovesMutableLiveData: MutableLiveData<ResultState<*>> = MutableLiveData()
-
-    val pokemonMovesData: LiveData<ResultState<*>> = _pokemonMovesMutableLiveData
-
-    fun getPokemonMovesFromLocalStorage() {
-        viewModelScope.launch {
-            val loading = ResultState.Loading
-            _pokemonMovesMutableLiveData.value = loading
-            val listPokemonMove = getPokemonMovesFromDB()
-            _pokemonMovesMutableLiveData.value = listPokemonMove
-        }
-    }
-
-    private suspend fun getPokemonMovesFromDB(): ResultState<*> {
-
-        val pokemonsMovesList = dbPokemon.pokemonDAO().getSelectedMovesPokemonData()
-        if (pokemonsMovesList.isNotEmpty())
-            return ResultState.Success(pokemonsMovesList)
-        return ResultState.Error("Something went wrong when reading data from database", null)
-    }
-
     fun getAllPokemonDataFromLocalStorage() {
         viewModelScope.launch {
             val mainPokemonData = getAllPokemonDataFromRoom()
@@ -99,7 +78,7 @@ class PokemonNewFlowHiltViewModel @Inject constructor(
         getRandomPokemon.execute()
             .flowOn(Dispatchers.IO)
             .onEach { _pokemonMutableLiveData.value = it }
-            // .catch { e -> e.printStackTrace() }
+            .catch { e -> e.printStackTrace() }
             .launchIn(viewModelScope)
 
 //        viewModelScope.launch {
@@ -140,42 +119,7 @@ class PokemonNewFlowHiltViewModel @Inject constructor(
 //        }
     }
 
-    private fun getRandomSelectedPokemonId(allPokemons: ResultState.Success<*>): Int {
-        val randomPokemonUrl = allPokemons.data as AllPokemons
-        val separateString = randomPokemonUrl.results.random().url.split("/")
-        val pokemonId = separateString.get(separateString.size - 2)
-        Log.d(
-            ContentValues.TAG,
-            "Id is: ${pokemonId.toInt()}"
-        )
-        return pokemonId.toInt()
-    }
 
-    private suspend fun deleteAllPokemonData() {
-        coroutineScope {
-            val deferreds = listOf(
-                async { dbPokemon.pokemonDAO().clearMainPokemonData() },
-                async { dbPokemon.pokemonDAO().clearPokemonStatsData() },
-                async { dbPokemon.pokemonDAO().clearMPokemonMovesData() }
-            )
-            deferreds.awaitAll()
-        }
-    }
-
-    private suspend fun insertPokemonIntoDatabase(pokemonData: MainPokemon) {
-
-        val pokemonMain =
-            dbMapper?.mapDomainMainPokemonToDBMainPokemon(pokemonData) ?: DBMainPokemon()
-        dbPokemon.pokemonDAO().insertMainPokemonData(pokemonMain)
-
-        val pokemonStats =
-            dbMapper?.mapDomainPokemonStatsToDbPokemonStats(pokemonData.stats) ?: listOf()
-        dbPokemon.pokemonDAO().insertStatsPokemonData(pokemonStats)
-
-        val pokemonMoves =
-            dbMapper?.mapDomainPokemonMovesToDbPokemonMoves(pokemonData.moves) ?: listOf()
-        dbPokemon.pokemonDAO().insertMovesPokemonData(pokemonMoves)
-    }
 
     private suspend fun getAllPokemonData(): ResultState<*> {
         return pokemonRepository.getAllPokemons(100, 0)
