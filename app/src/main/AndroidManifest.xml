@@ -23,6 +23,8 @@
         <activity android:name="com.nikola_brodar.pokemonapi.ui.activities.PokemonActivity" />
         <activity android:name="com.nikola_brodar.pokemonapi.ui.activities.PokemonMovesActivity" />
 
+        <activity android:name="com.nikola_brodar.pokemonapi.ui.activities.PokemonNewFlowHiltActivity" />
+
     </application>
 
 </manifest>
