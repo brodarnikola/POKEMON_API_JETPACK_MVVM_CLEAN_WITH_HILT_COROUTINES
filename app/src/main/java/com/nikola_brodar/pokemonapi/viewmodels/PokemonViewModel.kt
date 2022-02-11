@@ -25,8 +25,6 @@ import androidx.lifecycle.viewModelScope
 import com.nikola_brodar.data.database.PokemonDatabase
 import com.nikola_brodar.data.database.mapper.DbMapper
 import com.nikola_brodar.data.database.model.DBMainPokemon
-import com.nikola_brodar.data.database.model.DBPokemonMoves
-import com.nikola_brodar.data.di_dagger2.PokemonNetwork
 import com.nikola_brodar.domain.ResultState
 import com.nikola_brodar.domain.model.AllPokemons
 import com.nikola_brodar.domain.model.MainPokemon

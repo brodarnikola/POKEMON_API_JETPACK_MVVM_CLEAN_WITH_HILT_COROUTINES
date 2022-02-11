@@ -20,7 +20,6 @@ import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.nikola_brodar.data.BuildConfig
-import com.nikola_brodar.data.di_dagger2.PokemonNetwork
 import com.nikola_brodar.data.networking.PokemonRepositoryApi
 import dagger.Module
 import dagger.Provides
@@ -43,14 +42,12 @@ class NetworkModuleHilt {
 
     @Provides
     @Singleton
-    @PokemonNetwork
     fun provideLoggingInterceptor() =
         HttpLoggingInterceptor().apply { level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE }
 
     @Provides
     @Singleton
-    @PokemonNetwork
-    fun provideAuthInterceptorOkHttpClient( @PokemonNetwork interceptor: HttpLoggingInterceptor): OkHttpClient {
+    fun provideAuthInterceptorOkHttpClient(  interceptor: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder().addInterceptor(interceptor)
             .addNetworkInterceptor(StethoInterceptor())
             .build()
@@ -59,13 +56,11 @@ class NetworkModuleHilt {
 
     @Provides
     @Singleton
-    @PokemonNetwork
-    fun provideGsonConverterFactory( @PokemonNetwork gson: Gson): GsonConverterFactory =
+    fun provideGsonConverterFactory( gson: Gson): GsonConverterFactory =
         GsonConverterFactory.create(gson)
 
     @Singleton
     @Provides
-    @PokemonNetwork
     fun provideGsonBuilder(): Gson {
         return GsonBuilder()
             .create()
@@ -73,8 +68,7 @@ class NetworkModuleHilt {
 
     @Singleton
     @Provides
-    @PokemonNetwork
-    fun provideRetrofit(@PokemonNetwork converterFactory: GsonConverterFactory, @PokemonNetwork client: OkHttpClient): Retrofit.Builder {
+    fun provideRetrofit( converterFactory: GsonConverterFactory, client: OkHttpClient): Retrofit.Builder {
         return Retrofit.Builder()
             .client(client)
             .baseUrl(RETROFIT_BASE_URL)
@@ -83,8 +77,7 @@ class NetworkModuleHilt {
 
     @Singleton
     @Provides
-    @PokemonNetwork
-    fun provideWeatherService( @PokemonNetwork retrofit: Retrofit.Builder): PokemonRepositoryApi {
+    fun provideService(  retrofit: Retrofit.Builder): PokemonRepositoryApi {
         return retrofit
             .build()
             .create(PokemonRepositoryApi::class.java)

@@ -18,23 +18,22 @@ package com.nikola_brodar.data.di
 
 import com.nikola_brodar.data.database.PokemonDatabase
 import com.nikola_brodar.data.database.mapper.DbMapper
-import com.nikola_brodar.data.di_dagger2.PokemonNetwork
 import com.nikola_brodar.data.networking.PokemonRepositoryApi
 import com.nikola_brodar.data.repository.PokemonRepositoryImpl
 import com.nikola_brodar.domain.repository.PokemonRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
-import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(SingletonComponent::class)
 class RepositoryModule {
 
     @Provides
-    @PokemonNetwork
-    fun provideAllDataFromRestApiNetworkOrFromRoom(pokemonDatabase: PokemonDatabase, @PokemonNetwork pokemonRepositoryApi: PokemonRepositoryApi, dbMapper : DbMapper) : PokemonRepository {
+    @Singleton
+    fun provideAllDataFromRestApiNetworkOrFromRoom(pokemonDatabase: PokemonDatabase, pokemonRepositoryApi: PokemonRepositoryApi, dbMapper : DbMapper) : PokemonRepository {
         return PokemonRepositoryImpl(pokemonDatabase, pokemonRepositoryApi, dbMapper)
     }
 }
